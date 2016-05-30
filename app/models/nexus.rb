@@ -83,7 +83,7 @@ class Nexus < ActiveRecord::Base
 		update_items!
 		unless no_bases
 			update_attributes!(:updating_turns => true)
-			update_base_turns!
+			update_turns!
 		end
 	end
 
@@ -202,6 +202,8 @@ class Nexus < ActiveRecord::Base
 	handle_asynchronously :update_jump_map!
 
 	def update_turns!
+		Position.destroy_all
+		Base.destroy_all
 		xml = Nexus.xml_client
 		xml.fetch_positions!
 		Base.link_outposts_to_hub!
@@ -213,17 +215,4 @@ class Nexus < ActiveRecord::Base
 	end
 
 	handle_asynchronously :update_turns!
-
-	def update_base_turns!
-		xml = Nexus.xml_client
-		xml.fetch_positions!
-		Base.link_outposts_to_hub!
-		client = Nexus.html_client
-		client.login 
-		update_attributes!(:update_notice => "Fetching turns for starbases")
-		Position.starbases.each{|p| p.base.fetch_turn!}
-		update_attributes!(:update_notice => "Starbase turns fetched", :updating_turns => false, :turns_fetched_at => Time.now)
-	end
-
-	handle_asynchronously :update_base_turns!
 end

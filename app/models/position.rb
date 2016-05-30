@@ -14,7 +14,7 @@ class Position < ActiveRecord::Base
 	# design
 	# position_class
 
-	after_save :create_base
+	after_save :create_base, if: "self.base?"
 
 	scope :bases, -> {where(['position_class IN (?)', BASE_CLASSES])}
 	scope :starbases, -> {where("position_class = 'Starbase'")}
