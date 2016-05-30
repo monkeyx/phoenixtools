@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 1) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "affiliation_attributes", force: :cascade do |t|
     t.integer  "affiliation_id"
     t.string   "attr_key",       default: ""
@@ -21,8 +24,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "affiliation_attributes", ["affiliation_id"], name: "index_affiliation_attributes_on_affiliation_id"
-  add_index "affiliation_attributes", ["attr_key"], name: "index_affiliation_attributes_on_attr_key"
+  add_index "affiliation_attributes", ["affiliation_id"], name: "index_affiliation_attributes_on_affiliation_id", using: :btree
+  add_index "affiliation_attributes", ["attr_key"], name: "index_affiliation_attributes_on_attr_key", using: :btree
 
   create_table "affiliations", force: :cascade do |t|
     t.string   "tag"
@@ -31,8 +34,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "affiliations", ["name"], name: "index_affiliations_on_name"
-  add_index "affiliations", ["tag"], name: "index_affiliations_on_tag"
+  add_index "affiliations", ["name"], name: "index_affiliations_on_name", using: :btree
+  add_index "affiliations", ["tag"], name: "index_affiliations_on_tag", using: :btree
 
   create_table "base_items", force: :cascade do |t|
     t.integer  "base_id"
@@ -43,9 +46,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "base_items", ["base_id"], name: "index_base_items_on_base_id"
-  add_index "base_items", ["category"], name: "index_base_items_on_category"
-  add_index "base_items", ["item_id"], name: "index_base_items_on_item_id"
+  add_index "base_items", ["base_id"], name: "index_base_items_on_base_id", using: :btree
+  add_index "base_items", ["category"], name: "index_base_items_on_category", using: :btree
+  add_index "base_items", ["item_id"], name: "index_base_items_on_item_id", using: :btree
 
   create_table "base_resources", force: :cascade do |t|
     t.integer "item_id"
@@ -58,8 +61,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.float   "resource_yield",     default: 0.0
   end
 
-  add_index "base_resources", ["base_id"], name: "index_base_resources_on_base_id"
-  add_index "base_resources", ["item_id"], name: "index_base_resources_on_item_id"
+  add_index "base_resources", ["base_id"], name: "index_base_resources_on_base_id", using: :btree
+  add_index "base_resources", ["item_id"], name: "index_base_resources_on_item_id", using: :btree
 
   create_table "bases", force: :cascade do |t|
     t.string   "name"
@@ -90,15 +93,15 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "bases", ["affiliation_id"], name: "index_bases_on_affiliation_id"
-  add_index "bases", ["celestial_body_id"], name: "index_bases_on_celestial_body_id"
-  add_index "bases", ["hub_id"], name: "index_bases_on_hub_id"
-  add_index "bases", ["maintenance"], name: "index_bases_on_maintenance"
-  add_index "bases", ["name"], name: "index_bases_on_name"
-  add_index "bases", ["patches"], name: "index_bases_on_patches"
-  add_index "bases", ["race"], name: "index_bases_on_race"
-  add_index "bases", ["star_system_id"], name: "index_bases_on_star_system_id"
-  add_index "bases", ["starbase"], name: "index_bases_on_starbase"
+  add_index "bases", ["affiliation_id"], name: "index_bases_on_affiliation_id", using: :btree
+  add_index "bases", ["celestial_body_id"], name: "index_bases_on_celestial_body_id", using: :btree
+  add_index "bases", ["hub_id"], name: "index_bases_on_hub_id", using: :btree
+  add_index "bases", ["maintenance"], name: "index_bases_on_maintenance", using: :btree
+  add_index "bases", ["name"], name: "index_bases_on_name", using: :btree
+  add_index "bases", ["patches"], name: "index_bases_on_patches", using: :btree
+  add_index "bases", ["race"], name: "index_bases_on_race", using: :btree
+  add_index "bases", ["star_system_id"], name: "index_bases_on_star_system_id", using: :btree
+  add_index "bases", ["starbase"], name: "index_bases_on_starbase", using: :btree
 
   create_table "celestial_bodies", force: :cascade do |t|
     t.string   "name"
@@ -113,9 +116,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "celestial_bodies", ["cbody_id"], name: "index_celestial_bodies_on_cbody_id"
-  add_index "celestial_bodies", ["name"], name: "index_celestial_bodies_on_name"
-  add_index "celestial_bodies", ["star_system_id"], name: "index_celestial_bodies_on_star_system_id"
+  add_index "celestial_bodies", ["cbody_id"], name: "index_celestial_bodies_on_cbody_id", using: :btree
+  add_index "celestial_bodies", ["name"], name: "index_celestial_bodies_on_name", using: :btree
+  add_index "celestial_bodies", ["star_system_id"], name: "index_celestial_bodies_on_star_system_id", using: :btree
 
   create_table "celestial_body_attributes", force: :cascade do |t|
     t.integer  "celestial_body_id"
@@ -125,8 +128,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "celestial_body_attributes", ["attr_key"], name: "index_celestial_body_attributes_on_attr_key"
-  add_index "celestial_body_attributes", ["celestial_body_id"], name: "index_celestial_body_attributes_on_celestial_body_id"
+  add_index "celestial_body_attributes", ["attr_key"], name: "index_celestial_body_attributes_on_attr_key", using: :btree
+  add_index "celestial_body_attributes", ["celestial_body_id"], name: "index_celestial_body_attributes_on_celestial_body_id", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -142,7 +145,7 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "item_attributes", force: :cascade do |t|
     t.integer  "item_id"
@@ -152,8 +155,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "item_attributes", ["attr_key"], name: "index_item_attributes_on_attr_key"
-  add_index "item_attributes", ["item_id"], name: "index_item_attributes_on_item_id"
+  add_index "item_attributes", ["attr_key"], name: "index_item_attributes_on_attr_key", using: :btree
+  add_index "item_attributes", ["item_id"], name: "index_item_attributes_on_item_id", using: :btree
 
   create_table "item_groups", force: :cascade do |t|
     t.integer  "base_id"
@@ -165,10 +168,10 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "item_groups", ["base_id"], name: "index_item_groups_on_base_id"
-  add_index "item_groups", ["group_id"], name: "index_item_groups_on_group_id"
-  add_index "item_groups", ["item_id"], name: "index_item_groups_on_item_id"
-  add_index "item_groups", ["name"], name: "index_item_groups_on_name"
+  add_index "item_groups", ["base_id"], name: "index_item_groups_on_base_id", using: :btree
+  add_index "item_groups", ["group_id"], name: "index_item_groups_on_group_id", using: :btree
+  add_index "item_groups", ["item_id"], name: "index_item_groups_on_item_id", using: :btree
+  add_index "item_groups", ["name"], name: "index_item_groups_on_name", using: :btree
 
   create_table "item_types", force: :cascade do |t|
     t.string   "name"
@@ -176,7 +179,7 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "item_types", ["name"], name: "index_item_types_on_name"
+  add_index "item_types", ["name"], name: "index_item_types_on_name", using: :btree
 
   create_table "items", force: :cascade do |t|
     t.string   "name"
@@ -187,8 +190,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "items", ["item_type_id"], name: "index_items_on_item_type_id"
-  add_index "items", ["name"], name: "index_items_on_name"
+  add_index "items", ["item_type_id"], name: "index_items_on_item_type_id", using: :btree
+  add_index "items", ["name"], name: "index_items_on_name", using: :btree
 
   create_table "jump_links", force: :cascade do |t|
     t.integer  "from_id"
@@ -200,8 +203,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "jump_links", ["from_id"], name: "index_jump_links_on_from_id"
-  add_index "jump_links", ["to_id"], name: "index_jump_links_on_to_id"
+  add_index "jump_links", ["from_id"], name: "index_jump_links_on_from_id", using: :btree
+  add_index "jump_links", ["to_id"], name: "index_jump_links_on_to_id", using: :btree
 
   create_table "market_buys", force: :cascade do |t|
     t.integer  "item_id"
@@ -212,8 +215,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "market_buys", ["base_id"], name: "index_market_buys_on_base_id"
-  add_index "market_buys", ["item_id"], name: "index_market_buys_on_item_id"
+  add_index "market_buys", ["base_id"], name: "index_market_buys_on_base_id", using: :btree
+  add_index "market_buys", ["item_id"], name: "index_market_buys_on_item_id", using: :btree
 
   create_table "market_sells", force: :cascade do |t|
     t.integer  "item_id"
@@ -224,8 +227,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "market_sells", ["base_id"], name: "index_market_sells_on_base_id"
-  add_index "market_sells", ["item_id"], name: "index_market_sells_on_item_id"
+  add_index "market_sells", ["base_id"], name: "index_market_sells_on_base_id", using: :btree
+  add_index "market_sells", ["item_id"], name: "index_market_sells_on_item_id", using: :btree
 
   create_table "mass_productions", force: :cascade do |t|
     t.integer  "base_id"
@@ -236,9 +239,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "mass_productions", ["base_id"], name: "index_mass_productions_on_base_id"
-  add_index "mass_productions", ["item_id"], name: "index_mass_productions_on_item_id"
-  add_index "mass_productions", ["status"], name: "index_mass_productions_on_status"
+  add_index "mass_productions", ["base_id"], name: "index_mass_productions_on_base_id", using: :btree
+  add_index "mass_productions", ["item_id"], name: "index_mass_productions_on_item_id", using: :btree
+  add_index "mass_productions", ["status"], name: "index_mass_productions_on_status", using: :btree
 
   create_table "nexus", force: :cascade do |t|
     t.string   "nexus_user",          default: ""
@@ -276,8 +279,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "path_points", ["path_id"], name: "index_path_points_on_path_id"
-  add_index "path_points", ["sequence"], name: "index_path_points_on_sequence"
+  add_index "path_points", ["path_id"], name: "index_path_points_on_path_id", using: :btree
+  add_index "path_points", ["sequence"], name: "index_path_points_on_sequence", using: :btree
 
   create_table "paths", force: :cascade do |t|
     t.integer  "from_id"
@@ -287,8 +290,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "paths", ["from_id"], name: "index_paths_on_from_id"
-  add_index "paths", ["to_id"], name: "index_paths_on_to_id"
+  add_index "paths", ["from_id"], name: "index_paths_on_from_id", using: :btree
+  add_index "paths", ["to_id"], name: "index_paths_on_to_id", using: :btree
 
   create_table "peripheries", force: :cascade do |t|
     t.string   "name"
@@ -296,7 +299,7 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "peripheries", ["name"], name: "index_peripheries_on_name"
+  add_index "peripheries", ["name"], name: "index_peripheries_on_name", using: :btree
 
   create_table "periphery_distances", force: :cascade do |t|
     t.integer  "periphery_id"
@@ -306,8 +309,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "periphery_distances", ["periphery_id"], name: "index_periphery_distances_on_periphery_id"
-  add_index "periphery_distances", ["to_id"], name: "index_periphery_distances_on_to_id"
+  add_index "periphery_distances", ["periphery_id"], name: "index_periphery_distances_on_periphery_id", using: :btree
+  add_index "periphery_distances", ["to_id"], name: "index_periphery_distances_on_to_id", using: :btree
 
   create_table "positions", force: :cascade do |t|
     t.string   "name"
@@ -325,14 +328,14 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "positions", ["celestial_body_id"], name: "index_positions_on_celestial_body_id"
-  add_index "positions", ["design"], name: "index_positions_on_design"
-  add_index "positions", ["landed"], name: "index_positions_on_landed"
-  add_index "positions", ["orbit"], name: "index_positions_on_orbit"
-  add_index "positions", ["position_class"], name: "index_positions_on_position_class"
-  add_index "positions", ["quad"], name: "index_positions_on_quad"
-  add_index "positions", ["ring"], name: "index_positions_on_ring"
-  add_index "positions", ["star_system_id"], name: "index_positions_on_star_system_id"
+  add_index "positions", ["celestial_body_id"], name: "index_positions_on_celestial_body_id", using: :btree
+  add_index "positions", ["design"], name: "index_positions_on_design", using: :btree
+  add_index "positions", ["landed"], name: "index_positions_on_landed", using: :btree
+  add_index "positions", ["orbit"], name: "index_positions_on_orbit", using: :btree
+  add_index "positions", ["position_class"], name: "index_positions_on_position_class", using: :btree
+  add_index "positions", ["quad"], name: "index_positions_on_quad", using: :btree
+  add_index "positions", ["ring"], name: "index_positions_on_ring", using: :btree
+  add_index "positions", ["star_system_id"], name: "index_positions_on_star_system_id", using: :btree
 
   create_table "sectors", force: :cascade do |t|
     t.integer  "celestial_body_id"
@@ -343,9 +346,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "sectors", ["celestial_body_id"], name: "index_sectors_on_celestial_body_id"
-  add_index "sectors", ["x"], name: "index_sectors_on_x"
-  add_index "sectors", ["y"], name: "index_sectors_on_y"
+  add_index "sectors", ["celestial_body_id"], name: "index_sectors_on_celestial_body_id", using: :btree
+  add_index "sectors", ["x"], name: "index_sectors_on_x", using: :btree
+  add_index "sectors", ["y"], name: "index_sectors_on_y", using: :btree
 
   create_table "star_systems", force: :cascade do |t|
     t.string   "name"
@@ -355,9 +358,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "star_systems", ["affiliation_id"], name: "index_star_systems_on_affiliation_id"
-  add_index "star_systems", ["name"], name: "index_star_systems_on_name"
-  add_index "star_systems", ["periphery_id"], name: "index_star_systems_on_periphery_id"
+  add_index "star_systems", ["affiliation_id"], name: "index_star_systems_on_affiliation_id", using: :btree
+  add_index "star_systems", ["name"], name: "index_star_systems_on_name", using: :btree
+  add_index "star_systems", ["periphery_id"], name: "index_star_systems_on_periphery_id", using: :btree
 
   create_table "stargate_routes", force: :cascade do |t|
     t.integer  "from_id"
@@ -366,8 +369,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "stargate_routes", ["from_id"], name: "index_stargate_routes_on_from_id"
-  add_index "stargate_routes", ["to_id"], name: "index_stargate_routes_on_to_id"
+  add_index "stargate_routes", ["from_id"], name: "index_stargate_routes_on_from_id", using: :btree
+  add_index "stargate_routes", ["to_id"], name: "index_stargate_routes_on_to_id", using: :btree
 
   create_table "stargates", force: :cascade do |t|
     t.integer  "star_system_id"
@@ -376,8 +379,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "stargates", ["celestial_body_id"], name: "index_stargates_on_celestial_body_id"
-  add_index "stargates", ["star_system_id"], name: "index_stargates_on_star_system_id"
+  add_index "stargates", ["celestial_body_id"], name: "index_stargates_on_celestial_body_id", using: :btree
+  add_index "stargates", ["star_system_id"], name: "index_stargates_on_star_system_id", using: :btree
 
   create_table "trade_routes", force: :cascade do |t|
     t.integer  "from_id"
@@ -389,9 +392,9 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "trade_routes", ["from_id"], name: "index_trade_routes_on_from_id"
-  add_index "trade_routes", ["item_id"], name: "index_trade_routes_on_item_id"
-  add_index "trade_routes", ["to_id"], name: "index_trade_routes_on_to_id"
+  add_index "trade_routes", ["from_id"], name: "index_trade_routes_on_from_id", using: :btree
+  add_index "trade_routes", ["item_id"], name: "index_trade_routes_on_item_id", using: :btree
+  add_index "trade_routes", ["to_id"], name: "index_trade_routes_on_to_id", using: :btree
 
   create_table "wormholes", force: :cascade do |t|
     t.integer  "star_system_id"
@@ -401,8 +404,8 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime "updated_at"
   end
 
-  add_index "wormholes", ["celestial_body_id"], name: "index_wormholes_on_celestial_body_id"
-  add_index "wormholes", ["star_system_id"], name: "index_wormholes_on_star_system_id"
-  add_index "wormholes", ["to_id"], name: "index_wormholes_on_to_id"
+  add_index "wormholes", ["celestial_body_id"], name: "index_wormholes_on_celestial_body_id", using: :btree
+  add_index "wormholes", ["star_system_id"], name: "index_wormholes_on_star_system_id", using: :btree
+  add_index "wormholes", ["to_id"], name: "index_wormholes_on_to_id", using: :btree
 
 end
