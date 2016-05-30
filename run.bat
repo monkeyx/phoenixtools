@@ -1,2 +1,2 @@
-RAILS_ENV=development bin/delayed_job restart
-bundle exec rails s -e development
+RAILS_ENV=production bin/delayed_job restart
+bundle exec rails s -e production
