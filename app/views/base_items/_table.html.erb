@@ -1,0 +1,55 @@
+<% if items.empty? %>
+<p>
+  None
+</p>
+<% else
+  sum = 0
+%>
+  <table class="small table">
+    <tr>
+      <% if defined?(show_base) && show_base %>
+      <th>Base</th>
+      <% end %>
+      <th colspan="2" align="right">Quantity</th>
+      <% unless defined?(show_base) && show_base %>
+      <th>Item</th>
+      <th align="left">Total Mass</th>
+      <% end %>
+    </tr>
+    <% items.each do |base_item|
+      sum += base_item.quantity
+    %>
+    <tr>
+      <% if defined?(show_base) && show_base %>
+      <td><!-- <%=base_item.id %> - --><%=link_to base_item.base, base_item.base %></td>
+      <% end %>
+      <td>
+        <%=number_field_tag "[item][#{base_item.item.id}]", (quantity_to_current ? base_item.quantity : nil), :size => 6, :style => 'width: 5em' %>
+      </td>
+      <td>
+        <% unless quantity_to_current %>
+        <%=base_item.quantity%>
+        <% end %>
+      </td>
+      <% unless defined?(show_base) && show_base %>
+      <td>
+        <%=link_to base_item.item, base_item.item%>
+      </td>
+      <td>
+        <%=base_item.total_mass%>
+      </td>
+      <% end %>
+      <% if base_item.item.sellable_good? && !base_item.item.local?(base_item.base) %>
+      <td class="<%=weeks_trade_css_class(base_item.base.weeks_supply_of_same_category(base_item.item))%>">
+        $<%=base_item.item.local_price(base_item.base)%> <%=base_item.item.market_bracket(base_item.base)%>
+      </td>
+      <% end %>
+    </tr>
+    <% end %>
+  </table>
+  <% if defined?(show_base) && show_base %>
+  <p>
+    Total: <%=sum%>
+  </p>
+  <% end %>
+<% end %>

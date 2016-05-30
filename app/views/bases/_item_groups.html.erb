@@ -1,0 +1,32 @@
+<%=render :partial => 'path_form', :locals => {:base => base, :auto_squad => true} %>
+<% base.grouped_item_groups.keys.each do |group_id|
+  item_group = base.grouped_item_groups[group_id]
+  if (@show_cargo && item_group[:total_cargo] > 0) || (@show_life && item_group[:total_life] > 0) || (@show_ores && item_group[:total_ores] > 0)
+%>
+  <%=form_tag "/bases/#{base.id}/set_item_group" do %>
+    <%=hidden_field_tag "item_group",  item_group[:group_name] %>
+    <b>Item Group: <%=item_group[:group_name]%> (<%=item_group[:group_id]%>)</b>
+      <%=render :partial => '/Base_items/table', :locals => {:items => item_group[:items], :show_Base => false, :quantity_to_current => true}%>
+    <%=submit_tag "Update Group" %>
+    <p>
+      Total Mass: <%=(item_group[:total_mass])%> mus. 
+      <% if item_group[:total_cargo] > 0%>
+      Cargo: <%=(item_group[:total_cargo])%> mus.
+      <% end %>
+      <% if item_group[:total_life] > 0 %>
+      Life: <%=(item_group[:total_life])%> mus.
+      <% end %> 
+      <% if item_group[:total_ores] > 0 %>
+      Ores: <%=(item_group[:total_ores])%> mus.
+      <% end %>
+    </p>
+  <% end -%>
+  <%= form_tag "/bases/#{base.id}/item_group_to_base" do %>
+    <%=hidden_field_tag "item_group", group_id %>
+    Move To: <%= select_tag "destination",  options_from_collection_for_select(base.nearest_affiliation_bases, "id", "to_s", params[:destination]) %>
+    <%=submit_tag "Send Squadron" %>
+  <% end %>
+  <br/>
+<%
+  end
+end %>

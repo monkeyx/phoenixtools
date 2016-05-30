@@ -1,0 +1,32 @@
+<% title("Home") %>
+<% heading("Phoenix Tools") %>
+<div class="jumbotron">
+	<div class="btn-toolbar" role="toolbar">
+		<div class="btn-group pull-right">
+			<%= fetch_button_form("Daily Update", fetch_daily_path, Nexus.config.daily_update_in_progress, 'btn-primary') %>
+		</div>
+		<div class="btn-group pull-left">
+			<%= fetch_button_form("Full Update", fetch_full_path, Nexus.config.full_update_in_progress, 'btn-danger') %>
+		</div>
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Market</th>
+				<th>Turns</th>
+				<th>Jump Map</th>
+				<th>Planetary Maps</th>
+				<th>Items</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><%= fetched_date(Nexus.config.market_fetched_at) %></td>
+				<td><%= fetched_date(Nexus.config.turns_fetched_at)%></td>
+				<td><%= fetched_date(Nexus.config.jump_map_fetched_at)%></td>
+				<td><%= fetched_date(Nexus.config.cbodies_fetched_at)%></td>
+				<td><%= fetched_date(Nexus.config.items_fetched_at)%></td>
+			</tr>
+		</tbody>
+	</table>
+</dib>

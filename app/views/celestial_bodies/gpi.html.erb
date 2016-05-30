@@ -1,0 +1,14 @@
+<% heading("GPI orders for #{@cbody} with #{@number_of_ships} ships")%>
+
+<%
+ships = @celestial_body.gpi_orders(@number_of_ships)
+count = 1
+%>
+<% ships.each do |ship_orders| %>
+<h2>Ship <%=count%></h2>
+<textarea cols="30" rows="20">
+<%=ship_orders.map{|o| o.to_s}.join("\n")%>
+</textarea>
+<%
+  count += 1
+end %>

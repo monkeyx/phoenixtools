@@ -1,0 +1,105 @@
+<% heading("Search Celestial Bodies") %>
+
+<% unless request.post? %>
+<table class="table">
+  <%= form_tag search_celestial_bodies_path do -%>
+  <tr>
+    <th>Star System</th>
+    <td>
+    <%=select_tag :star_system_id, 
+    options_from_collection_for_select(StarSystem.all, :id, :to_s, params[:star_system_id]),
+    :prompt => 'Filter by Star System' %>
+    </td>
+    <td colspan="2"><%=submit_tag 'Search', :class => 'btn btn-primary' %></td>
+  </tr>
+  <tr>
+    <th>Type</th>
+    <td>
+    Planets Only: <%=radio_button_tag 'cbody_type', CelestialBody::PLANET %><br/>
+    Planets and Moons Only: <%=radio_button_tag 'cbody_type', CelestialBody::MOON %><br/>
+    Gas Giants Only: <%=radio_button_tag 'cbody_type', CelestialBody::GAS_GIANT %><br/>
+    </td>
+    <th>Populated</th>
+    <td>
+    None: <%=radio_button_tag 'populated', '' %></br>
+    Open Populated Worlds: <%=radio_button_tag 'populated', 'Starbases can be open (no domes required)' %></br>
+    Closed Populated Worlds: <%=radio_button_tag 'populated', 'Starbases require domes' %></br>
+    </td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <td>
+    <%=text_field_tag 'cbody_attributes[][key]'%> <%=select_tag 'cbody_attributes[][op]', options_for_select(CelestialBody::ATTRIBUTE_SEARCH_OPERATORS) %> <%=text_field_tag 'cbody_attributes[][value]' %><br/>
+    <%=text_field_tag 'cbody_attributes[][key]'%> <%=select_tag 'cbody_attributes[][op]', options_for_select(CelestialBody::ATTRIBUTE_SEARCH_OPERATORS) %> <%=text_field_tag 'cbody_attributes[][value]' %><br/>
+    <%=text_field_tag 'cbody_attributes[][key]'%> <%=select_tag 'cbody_attributes[][op]', options_for_select(CelestialBody::ATTRIBUTE_SEARCH_OPERATORS) %> <%=text_field_tag 'cbody_attributes[][value]' %><br/>
+    <%=text_field_tag 'cbody_attributes[][key]'%> <%=select_tag 'cbody_attributes[][op]', options_for_select(CelestialBody::ATTRIBUTE_SEARCH_OPERATORS) %> <%=text_field_tag 'cbody_attributes[][value]' %><br/>
+    <%=text_field_tag 'cbody_attributes[][key]'%> <%=select_tag 'cbody_attributes[][op]', options_for_select(CelestialBody::ATTRIBUTE_SEARCH_OPERATORS) %> <%=text_field_tag 'cbody_attributes[][value]' %><br/>
+    </td>
+    <th>Terrain</th>
+    <td>
+    <%=text_field_tag 'terrain[]'%><br/>
+    <%=text_field_tag 'terrain[]'%><br/>
+    <%=text_field_tag 'terrain[]'%><br/>
+    </td>
+  </tr>
+  <% end -%>
+</table>
+<% else %>
+  Found <%=@cbodies.size%> celestial bodies matching:
+  <ul>
+    <% if @star_system %>
+      <li>System: <%=link_to @star_system, @star_system %></li>
+    <% end %>
+    <% unless @terrain.nil? || @terrain.empty? %>
+      <li>Terrain:
+        <ul>
+        <% @terrain.each do |t| %>
+          <li><%=t%></li>
+        <% end %>
+        </ul>
+      </li>
+    <% end %>
+    <% unless @attributes.nil? || @attributes.empty? %>
+      <li>Attributes:
+        <ul>
+          <% @attributes.each do |attr_params| %>
+            <li><%=attr_params[:key]%> <%=attr_params[:op]%> <%=attr_params[:value]%></li>
+          <% end %>
+        </ul>
+      </li>
+  <% end %>
+  <% unless @cbody_type.nil? %>
+      <li>
+      <% case @cbody_type
+      when CelestialBody::PLANET
+      %>Planets Only
+      <%
+      when CelestialBody::MOON
+      %>Planets and Moons
+      <%
+      when CelestialBody::GAS_GIANT
+      %>Gas Giants Only
+      <% end %>
+      </li>
+  <% end %>
+  </ul>
+  <%=link_to "New Search", search_celestial_bodies_path, :class => 'btn btn-primary' %>
+<% end %>
+<% unless @cbodies.nil? || @cbodies.empty? %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Star System</th>
+      <th>Celesital Body</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cbodies.each do |cbody| %>
+  <tr>
+    <td><%=link_to cbody.star_system, cbody.star_system %></td>
+    <td><%=link_to cbody, cbody %></td>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>

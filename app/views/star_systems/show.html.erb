@@ -1,0 +1,110 @@
+<% title(@star_system.to_s) %>
+<% heading(@star_system.to_s) %>
+
+<p>
+  <b>Government:</b>
+  <%=@star_system.government%>
+</p>
+<p>
+  Calculate shortest path:
+  <%=render :partial => 'path_form' %>
+</p>
+
+<h2>Known Celestial Bodies</h2>
+<% if @star_system.celestial_bodies.empty? %>
+<p>None</p>
+<% else %>
+<table class="table">
+  <tr>
+    <th>Celestial Body</th>
+    <th>Type</th>
+    <th>Quad</th>
+    <th>Ring</th>
+  </tr>
+  <% @star_system.celestial_bodies.each do |cbody| %>
+  <tr>
+    <td><%=link_to cbody, cbody%></td>
+    <td><%=cbody.cbody_type%></td>
+    <td><%=StarSystem::QUAD_NUMBERS[cbody.quad]%></td>
+    <td><%=cbody.ring%></td>
+    <td>
+      <% if cbody.breathable? && cbody.populated? %>
+        Populated (Breathable)
+      <% elsif cbody.breathable? %>
+        (Breathable)
+      <% elsif cbody.populated? %>
+        Populated
+      <%end%>
+    </td>
+    <% if cbody.unknown? %>
+    <td><%=link_to "Fetch Celestial Body Data", fetch_celestial_body_path(cbody), :class => 'btn btn-primary' %></td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+<% end %>
+<p>
+  <%=link_to "Fetch All Celestial Bodies Data", "/star_systems/#{@star_system.id}/fetch_cbodies", :class => 'btn btn-primary' %>
+</p>
+<h2>Known Starbases</h2>
+<% if @star_system.starbases.empty? %>
+<p>None</p>
+<% else %>
+<ul>
+<% @star_system.starbases.each do |starbase| %>
+  <li>
+    <%=link_to starbase, starbase %> on <%=h starbase.celestial_body %>
+  </li>
+<% end %>
+</ul>
+<% end %>
+
+<h2>Jump Links</h2>
+<% if @star_system.jump_links.empty? %>
+<p>None</p>
+<% else %>
+<ul>
+<% @star_system.jump_links.each do |jump_link| %>
+  <li>
+    <%=link_to jump_link.to, jump_link.to%> - <%=h jump_link.jumps%> jumps
+  </li>
+<% end 
+%>
+</ul>
+<%
+end
+%>
+
+<h2>Stargate</h2>
+<% if @star_system.stargates.empty? %>
+<p>None</p>
+<% else %>
+<ul>
+<% @star_system.stargate_linked_systems.each do |system| %>
+  <li>
+    <%=link_to system, system%>
+  </li>
+<% end
+%>
+</ul>
+<%
+end
+%>
+
+<h2>Wormhole</h2>
+<% if @star_system.wormhole_links.empty? %>
+<p>None</p>
+<% else %>
+<ul>
+<% @star_system.wormhole_links.each do |wormhole_link| %>
+  <li>
+    <%=link_to wormhole_link.to, wormhole_link.to%>
+  </li>
+<% end
+%>
+</ul>
+<%
+end
+%>
+
+<%= link_to 'Back', star_systems_path, :class => 'btn btn-primary' %>

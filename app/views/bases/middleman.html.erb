@@ -1,0 +1,45 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Middleman") %>
+
+<table class="table">
+  <tr>
+    <th>Middleman Buy Price</th>
+    <td>$<%=@item.middleman_buy_price%></td>
+  </tr>
+  <tr>
+    <th>Middleman Sell Price</th>
+    <td>$<%=@item.middleman_sell_price%></td>
+  </tr>
+  <tr>
+    <th>Middleman Quantity</th>
+    <td><%=@item.middleman_quantity%></td>
+  </tr>
+  <tr>
+    <th>
+      Best Seller
+    </th>
+    <td>
+          <%=link_to "#{@item.best_seller.base} @ $#{@item.best_seller.price}", @item.best_seller.base%>
+          <% if @item.best_seller.base.star_system %>
+          in <%=link_to @item.best_seller.base.star_system, @item.best_seller.base.star_system%>
+          <% end %>
+      </td>
+  </tr>
+  <tr>
+    <th>
+      Best Buyer
+    </th>
+    <td>
+      <%=link_to "#{@item.best_buyer.base} @ $#{@item.best_buyer.price}", @item.best_buyer.base%>
+      <% if @item.best_buyer.base.star_system %>
+      in <%=link_to @item.best_buyer.base.star_system, @item.best_buyer.base.star_system%>
+      <% end %>
+    </td>
+  </tr>
+</table>
+<br/>
+<%=raw orders_box(@item.middleman_orders)%>
+
+<p>
+  <%=link_to "Back", profitable_but_no_trade_route_items_path, :class => 'btn btn-primary' %>
+</p>

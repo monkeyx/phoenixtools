@@ -1,0 +1,46 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Trade Items") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'trade_items_report'} %>
+
+<ul>
+  <li>
+    <a href="#trade_goods">Trade Goods</a>
+  </li>
+  <li>
+    <a href="#life_goods">Life Goods</a>
+  </li>
+  <li>
+    <a href="#drugs">Drugs</a>
+  </li>
+</ul>
+
+<h2>Summary</h2>
+<%=render :partial => 'trade_goods_metrics', :locals => {:base => @base} %>
+
+<h2><a name="trade_goods">Trade Goods</a></h2>
+<u>High Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.high_value_goods(@base.non_local_trade_goods), :show_base => false, :quantity_to_current => true}%>
+<u>Medium Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.medium_value_goods(@base.non_local_trade_goods), :show_base => false, :quantity_to_current => true}%>
+<u>Low Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.low_value_goods(@base.non_local_trade_goods), :show_base => false, :quantity_to_current => true}%>
+
+<h2><a name="life_goods">Life Goods</a></h2>
+<u>High Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.high_value_goods(@base.non_local_life_goods), :show_base => false, :quantity_to_current => true}%>
+<u>Medium Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.medium_value_goods(@base.non_local_life_goods), :show_base => false, :quantity_to_current => true}%>
+<u>Low Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.low_value_goods(@base.non_local_life_goods), :show_base => false, :quantity_to_current => true}%>
+
+<h2><a name="drugs">Drugs</a></h2>
+<u>High Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.high_value_goods(@base.non_local_drugs), :show_base => false, :quantity_to_current => true}%>
+<u>Medium Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.medium_value_goods(@base.non_local_drugs), :show_base => false, :quantity_to_current => true}%>
+<u>Low Value</u>
+<%=render :partial => '/base_items/table', :locals => {:items => @base.low_value_goods(@base.non_local_drugs), :show_base => false, :quantity_to_current => true}%>
+
+<p>
+  <%=link_to "Back", @base%>
+</p>

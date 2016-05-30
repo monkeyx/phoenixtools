@@ -1,0 +1,26 @@
+<table class="table">
+<%= form_tag find_trade_routes_path  do %>
+  <tr>
+    <th>
+      Starting System:
+    </th>
+    <td colspan="2">
+      <%= select_tag "start",  options_from_collection_for_select(StarSystem.order('name ASC'), "id", "to_s", params[:start]) %>
+    </td>
+    <td rowspan="2" style="vertical-align: top; ">
+      <%= submit_tag "Filter", :class => 'btn btn-primary' %>
+    </td>
+  </tr>
+<!--   <tr>
+    <th>
+      Cargo Type:
+    </th>
+    <td>
+      <%=select_tag "item_type", options_from_collection_for_select(ItemType.order('name ASC'),:id, :name, params[:item_type]) %>
+    </td>
+    <td>
+      Has keys? <%=check_box_tag "keys", 'yes', params[:keys] %>
+    </td>
+  </tr> -->
+<% end %>
+</table>

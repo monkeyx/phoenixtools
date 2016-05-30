@@ -1,0 +1,10 @@
+<% heading("Shipping Jobs") %>
+<%=form_tag shipping_jobs_bases_path, :method => :get do%>
+Nearest to: <%= select_tag "nearest",  options_from_collection_for_select(StarSystem.all.order('name ASC'), "id", "to_s", params[:nearest]) %> 
+Cargo: <%=check_box_tag :cargo, 'yes', params[:cargo] %> Life: <%=check_box_tag :life, 'yes', params[:life] %> Ores: <%=check_box_tag :ores, 'yes', params[:ores] %>
+<%= submit_tag "Sort" %>
+<% end %>
+<% @bases.each do |base| %>
+<h2><%= link_to(base, base) %></h2>
+<%=render :partial => 'item_groups', :locals => {:base => base}%>
+<% end %>

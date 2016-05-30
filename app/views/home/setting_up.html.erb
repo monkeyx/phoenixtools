@@ -1,0 +1,23 @@
+<% title("Setting Up")%>
+<% heading("Getting initial data from Nexus...") %>
+<div class="center">
+	<div id="notice"></div>
+	<%= image_tag('large_loader.gif', alt: 'Loading...', title: 'Loading...') %>
+	<p>Please be patient, this can take a while.</p>
+</div>
+<% js("
+$(function() {
+    startRefresh();
+});
+
+function startRefresh() {
+    setTimeout(startRefresh,3000);
+    $.getJSON('/setup_status.js', function(data) {
+    	if(!data['updating']){
+    		window.location = '/';
+    	}else {
+    		$('\#notice').html(data['notice']);
+    	}
+    });
+}
+".html_safe)%>

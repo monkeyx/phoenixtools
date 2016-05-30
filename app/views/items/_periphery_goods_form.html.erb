@@ -1,0 +1,5 @@
+<div class="pull-left">
+  <%=form_tag periphery_goods_items_path, :method => :get do%>
+  <%= select_tag "periphery",  options_for_select(Periphery.all, params[:periphery]), :prompt => 'Filter by Periphery' %> <%= submit_tag "List" %>
+  <% end %>
+</div>

@@ -1,0 +1,73 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th></th>
+    <th>High Value</th>
+    <th>Medium Value</th>
+    <th>Low Value</th>
+    <th>Max Weekly Sales</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% unless base.trade_report_metrics[:trade_goods].empty? %>
+  <tr>
+    <th>Trade Goods</th>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:trade_goods][:weeks_for_high])%>">
+      $<%=base.trade_report_metrics[:trade_goods][:high_total]%>
+      <br/>(<%=base.trade_report_metrics[:trade_goods][:weeks_for_high]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:trade_goods][:weeks_for_medium])%>">
+      $<%=base.trade_report_metrics[:trade_goods][:medium_total]%>
+      <br/>(<%=base.trade_report_metrics[:trade_goods][:weeks_for_medium]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:trade_goods][:weeks_for_low])%>">
+      $<%=base.trade_report_metrics[:trade_goods][:low_total]%>
+      <br/>(<%=base.trade_report_metrics[:trade_goods][:weeks_for_low]%> weeks)
+    </td>
+    <td>
+      $<%=base.trade_report_metrics[:trade_goods][:max_sales]%>
+    </td>
+  </tr>
+  <% end %>
+  <% unless base.trade_report_metrics[:life_goods].empty? %>
+  <tr>
+    <th>Life Goods</th>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:life_goods][:weeks_for_high])%>">
+      $<%=base.trade_report_metrics[:life_goods][:high_total]%>
+      <br/>(<%=base.trade_report_metrics[:life_goods][:weeks_for_high]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:life_goods][:weeks_for_medium])%>">
+      $<%=base.trade_report_metrics[:life_goods][:medium_total]%>
+      <br/>(<%=base.trade_report_metrics[:life_goods][:weeks_for_medium]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:life_goods][:weeks_for_low])%>">
+      $<%=base.trade_report_metrics[:life_goods][:low_total]%>
+      <br/>(<%=base.trade_report_metrics[:life_goods][:weeks_for_low]%> weeks)
+    </td>
+    <td>
+      $<%=base.trade_report_metrics[:life_goods][:max_sales]%>
+    </td>
+  </tr>
+  <% end %>
+  <% unless base.trade_report_metrics[:drugs].empty? %>
+  <tr>
+    <th>Drugs</th>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:drugs][:weeks_for_high])%>">
+      $<%=base.trade_report_metrics[:drugs][:high_total]%>
+      <br/>(<%=base.trade_report_metrics[:drugs][:weeks_for_high]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:drugs][:weeks_for_medium])%>">
+      $<%=base.trade_report_metrics[:drugs][:medium_total]%>
+      <br/>(<%=base.trade_report_metrics[:drugs][:weeks_for_medium]%> weeks)
+    </td>
+    <td class="<%=weeks_trade_css_class(base.trade_report_metrics[:drugs][:weeks_for_low])%>">
+      $<%=base.trade_report_metrics[:drugs][:low_total]%>
+      <br/>(<%=base.trade_report_metrics[:drugs][:weeks_for_low]%> weeks)
+    </td>
+    <td>
+      $<%=base.trade_report_metrics[:drugs][:max_sales]%>
+    </td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>

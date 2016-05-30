@@ -1,0 +1,12 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Resource Production") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'resource_production'} %>
+
+<% unless @base.resource_report.empty? %>
+<%=render :partial => 'resource_report', :locals => {:resource_report => @base.resource_report} %>
+<% end %>
+
+<% unless @base.base_resources.empty? %>
+<h2>Base Resources</h2>
+<%=render :partial => 'resource_table', :locals => {:item_resources => @base.base_resources} %>
+<% end %>

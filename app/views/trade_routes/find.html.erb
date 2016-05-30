@@ -1,0 +1,5 @@
+<% title("Trade Routes") %>
+<% heading("Trade Routes Near #{@start_system}") %>
+
+<%=render :partial => 'find_form' %>
+<%=render :partial => 'table', :locals => {:trade_routes => @trade_routes} %>

@@ -1,0 +1,27 @@
+<table class="table">
+<%= form_tag shortest_path_star_systems_path, :method => :get  do %>
+  <tr>
+    <% unless @star_system %>
+    <th>
+      Starting System:
+    </th>
+    <td>
+      <%= select_tag "start",  options_from_collection_for_select(StarSystem.all.order('name ASC'), "id", "to_s", params[:start]) %>
+    </td>
+    <% else %>
+    <%=hidden_field_tag :start, @star_system.id %>
+    <% end %>
+  </tr>
+  <tr>
+    <th>
+      Destination System:
+    </th>
+    <td>
+      <%= select_tag "end",  options_from_collection_for_select(StarSystem.all.order('name ASC'), "id", "to_s", params[:end]) %>
+    </td>
+    <td rowspan="2" style="vertical-align: top; ">
+      <%= submit_tag "Plot", :class => 'btn btn-info' %>
+    </td>
+  </tr>
+<% end %>
+</table>

@@ -1,0 +1,70 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Competive Buys") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'competitive_buys'} %>
+
+<% unless @competitive_buys.empty? %>
+<p>
+  There are <%=@competitive_buys.size%> trade goods which <%=link_to @base, @base%> can buy competitively.
+</p>
+  <table class="table">
+    <tr>
+      <th>Item</th>
+      <th>Buy Price</th>
+      <th>Buy Volume</th>
+      <th>Best Seller</th>
+      <th>Best Buyer</th>
+      <th>Local Value</th>
+      <th>Current Supply</th>
+    </tr>
+    <% @competitive_buys.each do |buyable_good| %>
+    <tr>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>"><%=link_to buyable_good, buyable_good %></td>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>">
+        $<%=buyable_good.recommended_buy_price(@base)%>
+      </td>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>">
+        <%=buyable_good.recommended_buy_volume(@base)%>
+      </td>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>">
+        <% if buyable_good.best_seller %>
+        <%=link_to "#{buyable_good.best_seller.base} @ $#{buyable_good.best_seller.price}", buyable_good.best_seller.base%>
+        <% end %>
+      </td>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>">
+        <% if buyable_good.best_buyer %>
+        <%=link_to "#{buyable_good.best_buyer.base} @ $#{buyable_good.best_buyer.price}", buyable_good.best_buyer.base%>
+        <% end %>
+      </td>
+      <td class="<%=(@base.worth_buying?(buyable_good) ? "friendly" : "hostile")%>">
+        $<%=buyable_good.local_price(@base)%> [<%=buyable_good.market_bracket(@base)%>]
+      </td>
+      <td>
+        <%=@base.weeks_supply_of_same_category(buyable_good)%> weeks
+      </td>
+    </tr>
+    <% end %>
+  </table>
+
+<br/>
+<p>
+  <%=@competitive_buy_orders.size%> buy orders generated:
+</p>
+  <%
+    x = 0
+    y = @competitive_buy_orders.size > 100 ? 100 : @competitive_buy_orders.size
+    while x < @competitive_buy_orders.size do
+  %>
+  <%=raw orders_box(@competitive_buy_orders[x..y])%>
+  <%
+      x = y + 1
+      y = x + 100
+      y = y > @competitive_buy_orders.size - 1 ? @competitive_buy_orders.size - 1 : y
+    end %>
+<% else %>
+<p>
+  None available
+</p>
+<% end %>
+<p>
+  <%=link_to "Back", @starbase%>
+</p>

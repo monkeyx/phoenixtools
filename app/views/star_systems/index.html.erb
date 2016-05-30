@@ -1,0 +1,45 @@
+<% title("Star Systems") %>
+<a name="top"></a>
+<div class="text-right">
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Periphery <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <% Periphery.all.each do |p| %>
+    <li><a href="#periphery-<%=p.id%>"><%=p.name%></a></li>
+    <% end %>
+  </ul>
+</div>
+</div>
+<hr/>
+
+<% periphery = nil %>
+<table class="table">
+<% @star_systems.each do |star_system| %>
+  <%
+  if star_system.periphery != periphery
+    periphery = star_system.periphery
+    %>
+  <tr rowspan="2"><td><a name="periphery-<%= (periphery ? periphery.id : 0)%>"></a></td></tr>
+  <tr>
+    <th colspan="3"><h2><%=h periphery ? periphery : 'Unknown' %></h2></th>
+  </tr>
+  <tr>
+    <td><a href="#top" class="btn btn-default">Back to top</a></td>
+  </tr>
+  <%
+  end
+  %>
+  <tr>
+    <th><%= link_to star_system, star_system, :class => 'btn btn-info', :style => 'width: 12em' %></th>
+    <td>
+      <ul class="list-inline">
+      <%  star_system.jump_links.each do |link| %>
+      <li><%=link_to "#{link.to} - #{link.jumps}", link.to%></li>
+      <% end %>
+      </ul>
+    </td>
+  </tr>
+<% end %>
+</table>

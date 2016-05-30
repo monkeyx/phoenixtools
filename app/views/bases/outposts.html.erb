@@ -1,0 +1,29 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Outposts") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'outposts'} %>
+
+<% unless @base.outposts.empty? %>
+<table class="table">
+  <tr>
+    <th>Outpost</th>
+    <th>Location</th>
+    <th>Resource Production</th>
+    <th>Hub</th>
+  </tr>
+  <% @base.outposts.each do |outpost| %>
+  <tr>
+    <td><a name="<%=outpost.id%>"></a><%=outpost%></td>
+    <td><%=link_to outpost.star_system, outpost.star_system%> on <%=link_to outpost.celestial_body, outpost.celestial_body %></td>
+    <td>
+      <%=render :partial => 'resource_table', :locals => {:item_resources => outpost.base_resources.select{|ir| ir.complexes && ir.complexes > 0}} %>
+    </td>
+    <td>
+      <%=form_tag "/bases/#{outpost.id}/set_hub", :target => '_new', :method => :post do -%>
+      <%=select_tag :hub_id, options_from_collection_for_select(::Base.starbases, :id, :name, selected: outpost.hub_id) %>
+      <%=submit_tag 'Reassign'%>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+<% end %>

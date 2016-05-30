@@ -1,0 +1,5 @@
+<div class="pull-right">
+  <%=form_tag race_preferred_goods_items_path, :method => :get do%>
+  <%= select_tag :race, options_for_select(ItemAttribute.known_races, params[:race]), :prompt => 'Filter by Race' %> <%= submit_tag "List" %>
+  <% end %>
+</div>

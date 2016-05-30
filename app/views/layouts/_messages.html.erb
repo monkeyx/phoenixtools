@@ -1,0 +1,9 @@
+<% flash.each do |name, msg| %>
+  <% if msg.is_a?(String) && !msg.blank? %>
+  	<div class="alert alert-<%= (name == :notice ? "success" : (name == :alert ? "warning" : "error")) %>">
+      <button class="close alert-<%= (name == :notice ? "success" : (name == :alert ? "warning" : "error")) %>" aria-hidden="true" data-dismiss="alert" style="right: -10px;">&times;</button>
+      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+    </div>
+  <% end %>
+  <% flash.clear %>
+<% end %>

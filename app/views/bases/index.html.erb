@@ -1,0 +1,35 @@
+<% title("Bases") %>
+<% heading("Base Report") %>	
+
+<% content_for(:sub_nav) do %>
+<ul class="nav nav-pills">
+	<li class="<%= @all_affiliations && !@show_outposts  ? 'active' : '' %>"><%=link_to("All Starbases","/bases?all_affiliations=true")%></li>
+	<li class="<%= !@all_affiliations && !@show_outposts  ? 'active' : '' %>"><%=link_to("#{Nexus.config.affiliation} Starbases", "/bases?all_affiliations=false")%></li>
+	<li class="<%= @all_affiliations && @show_outposts  ? 'active' : '' %>"><%=link_to("All Starbases and Outposts","/bases?all_affiliations=true&show_outposts=true")%></li>
+	<li class="<%= !@all_affiliations && @show_outposts  ? 'active' : '' %>"><%=link_to("#{Nexus.config.affiliation} Starbases and Outposts", "/bases?show_outposts=true")%></li>
+</ul>
+<% end %>
+
+<% page_numbers(@bases) %>
+
+<table class="table" width="100%">
+	<thead>
+		<tr>
+			<th><%=link_to("Base","?page=#{params[:page]}&sort=name&show_outposts=#{@show_outposts}&all_affiliations=#{@all_affiliations}")%></th>
+			<th><%=link_to("Location", "?page=#{params[:page]}&sort=location&show_outposts=#{@show_outposts}&all_affiliations=#{@all_affiliations}")%></th>
+			<th colspan="2"></th>
+			<th>Last Updated</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% @bases.each do |base| %>
+	<tr>
+		<td><%=link_to(base, base)%></td>
+		<td><%=loc(base.star_system, base.celestial_body)%></td>
+		<td><%=link_to("Inventory", "#{inventory_basis_path(base)}", target: "_#{base.id}")%></td>
+		<td><%=link_to("Market Buys", "#{competitive_buys_basis_path(base)}", target: "_#{base.id}")%></td>
+		<td><%=fetched_date(base.updated_at)%></td>
+	</tr>
+	<% end %>
+	</tbody>
+</table>

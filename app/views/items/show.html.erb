@@ -1,0 +1,294 @@
+<% heading(@item.to_s) %>
+<% title(@item.to_s) %>
+
+<% if @item.unknown? %>
+<p><%=link_to "Fetch Data", fetch_item_url(@item), method: :post%></p>
+<% end %>
+
+<blockquote>
+  <%=h @item.tech_manual %>
+</blockquote>
+
+<% if @item.mass %>
+<p>
+  <b>Mass:</b>
+  <%= @item.mass %>
+</p>
+<p>
+  <b>Type:</b>
+  <%=h @item.item_type %>
+</p>
+<% end %>
+
+<% if @item.tech_level %>
+<p>
+  <b>Tech Level:</b>
+  <%=h @item.tech_level %>
+</p>
+<% end %>
+
+<% if @item.substitute_item %>
+<p>
+  <b>Substitute Item:</b>
+  <%=h @item.substitute_ratio %> x <%=link_to @item.substitute_item, @item.substitute_item %>
+</p>
+<% end %>
+
+<% if @item.star_system %>
+<p>
+  <b>Origin Star System:</b>
+  <%=link_to @item.star_system, @item.star_system %>
+  <% if @item.cbody %>
+  <br/>
+  <b>Origin Cbody:</b>
+  <%=link_to @item.cbody, @item.cbody %>
+  <% end %>
+  <br/>
+  <b>Origin Periphery:</b>
+  <%=h @item.star_system.periphery%>
+</p>
+<% end %>
+
+<% if @item.race %>
+<p>
+  <b>Race:</b>
+  <%=@item.race%>
+</p>
+<% end %>
+
+<% if @item.source_value %>
+<p>
+  <b>Source Value:</b>
+  $<%=@item.source_value%>
+</p>
+<% end %>
+
+<% if @item.sell_price_data %>
+<p>
+  <b>Market Sell Price</b>:
+  <%=@item.sell_price_data[0]%> +- <%=@item.sell_price_data[1]%>
+</p>
+<% end %>
+
+<% if @item.buy_price_data %>
+<p>
+  <b>Market Buy Price</b>:
+  <%=@item.buy_price_data[0]%> +- <%=@item.buy_price_data[1]%>
+</p>
+<% end %>
+
+<% if @item.producable? %>
+<p>
+  <b>Production</b>:
+  <%=h @item.production%>
+</p>
+<p>
+  <% cost = @item.estimated_production_cost %>
+  <% if cost %>
+  <b>Estimated Production Cost</b>:
+  <%=number_to_currency(cost)%>
+  <br/>
+  <b>RRP</b>:
+  <%=number_to_currency(@item.rrp)%>
+  <% else %>
+  Unknown
+  <% end %>
+</p>
+<p>
+  <b>Manufacturers Profit:</b>
+  <%=number_to_currency(@item.manufacturers_profit)%> (<%=number_to_currency(@item.profit_per_week)%>/week with <%=@item.initial_factories%> factories)
+</p>
+<p>
+  <b>Investment Cost:</b>
+  <%=number_to_currency(@item.investment_cost)%>
+  <br/>
+  <b>ROI:</b>
+  <%=@item.ROI%> weeks
+</p>
+<% end %>
+
+<% if @item.production_limit %>
+<p>
+  <b>Production Limit</b>:
+  <%=h @item.production_limit%>
+</p>
+<% end %>
+
+<% if @item.producable? && @item.raw_materials %>
+<p>
+  <b>Raw Materials:</b>
+  <ul>
+    <% @item.raw_materials.keys.each do |item| %>
+    <li><%=h @item.raw_materials[item]%> x <%=link_to item, item %></li>
+    <% end %>
+  </ul>
+</p>
+<% end %>
+
+<% if @item.researchable? && !@item.research_path.empty? %>
+<p>
+  <b>Research Path:</b>
+  <ul>
+    <% @item.research_path.each do |item| %>
+    <li><%=link_to item, item %></li>
+    <% end %>
+  </ul>
+</p>
+<% end %>
+
+<% if @item.blueprint && @item.blueprint.is_a?(Item) %>
+<p>
+  <b>Blueprint:</b>
+  <%=link_to @item.blueprint, @item.blueprint%>
+</p>
+<% end %>
+
+<% unless @item.ammo.nil? %>
+<p>
+  <b>Ammo:</b>
+  <ul>
+    <% @item.ammo.keys.each do |item| %>
+    <li><%=h @item.ammo[item]%> x <%=link_to item, item %></li>
+    <% end %>
+  </ul>
+</p>
+<% end %>
+
+<% unless params[:show_used_by].blank? || @item.used_by.nil? || @item.used_by.empty? %>
+<p>
+  <b>Used By:</b>
+  <ul>
+    <% @item.used_by.each do |item| %>
+    <li><%=link_to item, item %></li>
+    <% end %>
+  </ul>
+</p>
+<% else %>
+<p>
+  <%=link_to "[Show items that use this]", "#{item_path(@item)}?show_used_by=true"%>
+</p>
+<% end %>
+
+<h2>Find a Buyer</h2>
+<p>
+  <% if params[:closest_best_buyer]
+    cargo_system = StarSystem.find(params[:closest_best_buyer])
+    mb = @item.closest_best_buyer(cargo_system)
+    if mb
+      closest = mb.starbase
+      quantity = mb.quantity
+      price = mb.price
+  %>
+    <%= form_tag "/path_to_base", :method => :get  do %>
+    <%=hidden_field_tag :start_system, cargo_system.id %>
+    <%=hidden_field_tag :destination, closest.id %>
+    <%=hidden_field_tag :sell_item, @item.id %>
+    <%=hidden_field_tag :sell_quantity, quantity %>
+    Closest best buyer from <%=link_to cargo_system, cargo_system%> is <%=link_to closest, closest%> (<%=quantity%> x <%=number_to_currency(price)%>).
+    <%= submit_tag "Orders" %>
+    <% end %>
+    <br/>
+  <%
+    else %>
+    No buyers near <%=link_to cargo_system, cargo_system%>.
+<%  end
+  end %>
+  <%=form_tag "/items/#{@item.id}", :method => :get do %>
+  Cargo in system: <%= select_tag :closest_best_buyer,  options_from_collection_for_select(StarSystem.all.order('name ASC'), "id", "to_s", params[:closest_best_buyer]) %>
+  <%= submit_tag "Find Closest and Best Buyer" %>
+  <% end %>
+</p>
+
+<h2>Inventory</h2>
+<%=render :partial => '/base_items/table', :locals => {:items => @item.base_items, :show_base => true, :quantity_to_current => true} %>
+
+<h2>Starbase Production</h2>
+<% total = 0 %>
+<table class="table">
+  <% @item.mass_productions.select{|mp| mp.running?}.each do |mp|
+    total += mp.item_output.to_i
+  %>
+  <tr>
+    <th><%=link_to mp.base, mp.base %></th>
+    <td><%=mp.item_output.to_i%></td>
+  </tr>
+  <% end %>
+  <% @item.base_resources.select{|ir| ir.current_output > 0}.each do |ir|
+    total += ir.current_output.to_i
+  %>
+    <tr>
+      <th><% if ir.base %><%=link_to ir.base, ir.base %><% end %></th>
+      <td><%=ir.current_output.to_i%></td>
+    </tr>
+  <% end %>
+</table>
+<p>Total: <%=total%> / week</p>
+
+<% unless @item.resources_for_item.empty? %>
+<h2>Best Resources</h2>
+<%=render :partial => '/bases/resource_table', :locals => {:item_resources => @item.resources_for_item} %>
+<% end %>
+
+<h2>Sellers</h2>
+<% if @item.market_sells.empty? %>
+<p>None</p>
+<% else %>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Starbase</th>
+    <th>Location</th>
+    <th>Quantity</th>
+    <th>Price</th>
+  </tr>
+</thead>
+<tbody>
+  <% @item.market_sells.each do |mi| %>
+  <tr>
+    <td><%=link_to mi.base, mi.base%></td>
+    <% if mi.base.star_system %>
+    <td><%=h mi.base.celestial_body%>, <%=link_to mi.base.star_system, mi.base.star_system%></td>
+    <% else %>
+    <td></td>
+    <% end %>
+    <td><%=h mi.quantity%></td>
+    <td>$<%=h mi.price %></td>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>
+
+<h2>Buyers</h2>
+<% if @item.market_buys.empty? %>
+<p>None</p>
+<% else %>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Starbase</th>
+    <th>Location</th>
+    <th>Quantity</th>
+    <th>Price</th>
+  </tr>
+</thead>
+<tbody>
+  <% @item.market_buys.each do |mi| %>
+  <tr>
+    <td><%=link_to mi.base, mi.base%></td>
+    <% if mi.base.star_system %>
+    <td><%=h mi.base.celestial_body%>, <%=link_to mi.base.star_system, mi.base.star_system%></td>
+    <% else %>
+    <td></td>
+    <% end %>
+    <td><%=h mi.quantity%></td>
+    <td>$<%=h mi.price %></td>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>
+
+<p>
+<%= link_to 'Back', items_path %>
+</p>

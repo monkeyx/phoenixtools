@@ -1,0 +1,19 @@
+<h1>Set Items into group "<%=@group_name%>"</h1>
+
+<% unless @items.empty? %>
+<ul>
+  <% @items.each do |item,quantity| %>
+  <li>
+    <%=quantity%> x <%=link_to item, item%>
+  </li>
+  <% end %>
+</ul>
+<% else %>
+<p>None</p>
+<% end %>
+
+<%=raw orders_box(@orders)%>
+
+<div class="btn-group">
+  <%=link_to "Back", "/bases/#{@base.id}/inventory", :class => 'btn btn-primary' %>
+</div>

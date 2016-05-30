@@ -1,0 +1,36 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Item</th>
+    <th>Production</th>
+    <th>Consumption</th>
+    <th>Available</th>
+    <th>Weekly Burn</th>
+    <th>Weeks Remaining</th>
+    <th>Best Resource for Expansion</th>
+  </tr>
+</thead>
+<tbody>
+  <% resource_report.keys.sort{|a,b| a.id <=> b.id}.each do |item|
+    report_entry = resource_report[item]
+  %>
+  <tr>
+    <td class="<%=report_entry[:css_class]%>"><%=link_to item, item %></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:production]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:consumption]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:available]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:weekly_burn]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:weeks_remaining]%></td>
+    <td class="<%=report_entry[:css_class]%>">
+      <% if report_entry[:best_resource] %>
+        <% unless report_entry[:best_resource].base_id == @base.id %>
+        Outpost: <%=report_entry[:best_resource].base %> &mdash;
+        <% end %>
+      Resource ID: <%=report_entry[:best_resource].resource_id%> &mdash;
+      Next Complex Output: <%=report_entry[:best_resource].next_complex_output%>
+      <% end %>
+    </td>
+  </tr>
+  <% end %>
+</tbody>
+</table>

@@ -1,0 +1,12 @@
+<% title("Trade Routes") %>
+<% heading("Trade Route: #{@trade_route}") %>
+
+<p>
+  <%=(@trade_route.barges_assigned.nil? ? 0 : @trade_route.barges_assigned)%> out of <%=@trade_route.barges_max %> barges assigned.
+</p>
+<%=raw orders_box(@trade_route.to_orders(@from))%>
+<hr/>
+<div class="btn-group">
+  <%=link_to "Back", trade_routes_path, :class => 'btn btn-primary' %>
+  <%=link_to "Assign Barge", assign_barge_trade_route_path(@trade_route), :class => 'btn btn-default' %>
+</div>

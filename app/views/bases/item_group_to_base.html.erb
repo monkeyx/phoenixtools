@@ -1,0 +1,14 @@
+<h1>Squadron Move Items</h1>
+
+<p>
+  <b>From Base:</b> <%=link_to @base, @base%><br/>
+  <b>To Base:</b> <%=link_to @destination, @destination%><br/>
+  <b>Item Group:</b> <%=@item_group[:group_name]%> (<%=@item_group[:group_id]%>)<br/>
+  <b>Total Mass:</b> <%=@item_group[:total_mass]%>
+</p>
+
+<%=raw orders_box(@base.squadron_move_items_orders(@item_group, @destination))%>
+
+<div class="btn-group">
+  <%=link_to "Back", "/bases/#{@base.id}/item_groups", :class => 'btn btn-primary' %>
+</div>

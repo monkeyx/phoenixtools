@@ -1,0 +1,35 @@
+<h1>Shortest Path from <%=@start_system%> to <%=@end_base%></h1>
+<% if @path %>
+<ol>
+  <li><%=link_to @start_system, @start_system %></li>
+  <%
+    @path.path_points.each do |point|
+      %>
+  <li><%=link_to point.to, point.to%>
+    <% if point.jump_link %>&mdash; <%=point.jump_link.jumps%> jumps<% end %>
+    <% if point.stargate %>(Stargate)<% end %>
+    <% if point.wormhole %>(Wormhole)<% end %>
+  </li>
+  <%
+    end
+  %>
+</ol>
+<p>
+  Total: <%=@path.tu_cost%> TUs
+</p>
+<% else %>
+<p>No path found between <%=link_to @start_system, @start_system%> and <%=link_to @end_base, @end_base%>.</p>
+<% end %>
+<%=raw orders_box(@orders)%>
+<p>
+  Back to 
+  <% if params[:sell_item] 
+    item = Item.find(params[:sell_item])
+  %>
+  <%=link_to item, item%> |
+  <% end %>
+  <%=link_to @end_base, @end_base %> |
+  <%=link_to @start_system, @start_system%> |
+  <%=link_to @end_system, @end_system%> |
+  <%=link_to "Bases", bases_path %>
+</p>

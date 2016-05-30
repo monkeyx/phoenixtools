@@ -1,0 +1,40 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Mass Production") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'mass_production'} %>
+
+<% unless @base.mass_productions.empty? %>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Item</th>
+    <th>Factories</th>
+    <th>Status</th>
+    <th>Output</th>
+    <th>Resource Consumption</th>
+  </tr>
+</thead>
+<tbody>
+  <% @base.mass_productions.each do |mp| %>
+  <tr>
+    <td><%=link_to mp.item, mp.item %></td>
+    <td><%=mp.factories%></td>
+    <td><%=mp.status%></td>
+    <td><%=mp.item_output%></td>
+    <%
+    if mp.raw_materials
+      s = mp.raw_materials.keys.map{|item| "#{mp.raw_materials[item]} x #{link_to(item,item)}"}.join(", ")
+    else
+      s = ''
+    end
+    %>
+    <td><%=raw s%></td>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% else %>
+<p>
+  None
+</p>
+<% end %>
+<br class="clear"/>

@@ -1,0 +1,34 @@
+<!-- Fixed navbar -->
+<div class="navbar-wrapper">
+  <div class="container-fluid">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
+                 <span class="sr-only">Menu</span>
+                 <span class="icon-bar"></span>
+                 <span class="icon-bar"></span>
+                 <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Phoenix Tools</a>
+        </div>
+        <div id="navbar-main" class="collapse navbar-collapse" role="navigation">
+          <ul id="nav-left" class="nav navbar-nav">
+            <li id="nav-item-home" class="nav-item"><%= link_to('Home', main_app.root_path)%></li>
+            <li id="nav-item-bases" class="nav-item"><%= link_to('Bases', main_app.bases_path)%></li>
+            <li id="nav-item-trade" class="nav-item"><%= link_to('Trade Routes', main_app.trade_routes_path)%></li>
+            <li id="nav-item-star" class="nav-item"><%= link_to('Star Systems', main_app.star_systems_path)%></li>
+            <li id="nav-item-items" class="nav-item"><%= link_to('Items', main_app.items_path)%></li>
+            <li id="nav-item-shipping" class="nav-item"><%= link_to('Shipping Jobs', main_app.shipping_jobs_bases_path)%></li>
+            <li id="nav-item-mining" class="nav-item"><%= link_to('Mining Jobs', main_app.mining_jobs_bases_path)%></li>
+            <li id="nav-item-search-cbodies" class="nav-item"><%= link_to('Search Celestial Bodies', main_app.search_celestial_bodies_path)%></li>
+          </ul>
+          <ul id="nav-right" class="nav navbar-nav navbar-right">
+            <li id="nav-item-data" class="nav-item"><%= link_to('Data Admin', "/data") %></li>
+            <li id="nav-item-configure" class="nav-item"><%= link_to('Configure', main_app.configuration_index_path) %></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+</div>

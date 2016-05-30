@@ -1,0 +1,9 @@
+<% heading("Profitable Items But No Trade Route") %>
+
+<p>
+  There are <%=@items.size%> items which can be bought and sold at a profit but no trade route exists due to distances.
+</p>
+
+<%=link_to 'Show all items', '/items', :class => 'btn btn-primary' %>
+
+<%=render :partial => 'table', :locals => {:items => @items, :show_nearest_aff_base => false, :show_stopping_point => true, :show_manufacturing => false} %>

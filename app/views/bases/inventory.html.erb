@@ -1,0 +1,48 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Inventory") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'inventory'} %>
+
+<%=form_tag "/bases/#{@base.id}/set_item_group" do %>
+<table class="table">
+  <thead>
+  <tr>
+    <td></td>
+    <td>
+      Item Group: <%=text_field_tag "item_group" %> 
+    </td>
+    <td>
+      <%=submit_tag "Set Items", :class => 'btn btn-primary' %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      Personnel
+    </th>
+    <th>
+      Inventory
+    </th>
+    <th>
+      Raw Materials
+    </th>
+    <th>
+      Trade Items
+    </th>
+  </thead>
+  <tbody>
+  <tr>
+    <td align="left" valign="top">
+      <%=render :partial => '/base_items/table', :locals => {:items => @base.personnel, :show_starbase => false, :quantity_to_current => false}%>
+    </td>
+    <td align="left" valign="top">
+      <%=render :partial => '/base_items/table', :locals => {:items => @base.inventory, :show_starbase => false, :quantity_to_current => false}%>
+    </td>
+    <td align="left" valign="top">
+      <%=render :partial => '/base_items/table', :locals => {:items => @base.raw_materials, :show_starbase => false, :quantity_to_current => false}%>
+    </td>
+    <td align="left" valign="top">
+      <%=render :partial => '/base_items/table', :locals => {:items => @base.trade_items, :show_starbase => false, :quantity_to_current => false}%>
+    </td>
+  </tr>
+</tbody>
+</table>
+<% end %>

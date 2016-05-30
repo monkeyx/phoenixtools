@@ -1,0 +1,50 @@
+<% heading("Mining Jobs") %>
+
+<h2>Local Urgent Jobs</h2>
+<% unless @jobs.empty? %>
+<table class="table">
+  <tr>
+    <th>Starbase</th>
+    <th>Item</th>
+    <th>Production</th>
+    <th>Consumption</th>
+    <th>Available</th>
+    <th>Weekly Burn</th>
+    <th>Weeks Remaining</th>
+    <th>Best Resource for Expansion</th>
+  </tr>
+  <% @jobs.each do |report_entry|
+    base = report_entry[:base]
+    item = report_entry[:item]
+  %>
+  <tr>
+    <td class="<%=report_entry[:css_class]%>"><%=link_to base, base %></td>
+    <td class="<%=report_entry[:css_class]%>"><%=link_to item, item %></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:production]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:consumption]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:available]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:weekly_burn]%></td>
+    <td class="<%=report_entry[:css_class]%>"><%=report_entry[:weeks_remaining]%></td>
+    <td class="<%=report_entry[:css_class]%>">
+      <% if report_entry[:best_resource] %>
+        <%=link_to(report_entry[:best_resource].base, report_entry[:best_resource].base) %>
+      <% end %>
+      Resource ID: <%=report_entry[:best_resource].resource_id%> &mdash;
+      Next Complex Output: <%=report_entry[:best_resource].next_complex_output%>
+    </td>
+  </tr>
+  <% end %>
+</table>
+<% else %>
+<p>
+  None
+</p>
+<% end %>
+
+<% @rare_ores.keys.sort{|a,b| a.id <=> b.id}.each do |item|
+  @item = item
+%>
+<h2><%=item%></h2>
+
+<%=render :partial => '/bases/resource_table', :locals => {:item_resources => @rare_ores[item]} %>
+<% end %>

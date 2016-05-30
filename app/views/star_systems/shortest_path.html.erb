@@ -1,0 +1,30 @@
+<% title(@start_system.to_s) %>
+<% heading("Shortest Path between #{@start_system} and #{@end_system}") %>
+<% unless @path.nil? %>
+<ol>
+  <li><%=link_to @start_system, @start_system %></li>
+  <%
+    @path.path_points.each do |point|
+      %>
+  <li><%=link_to point.to, point.to%>
+    <% if point.jump_link %>&mdash; <%=point.jump_link.jumps%> jumps<% end %>
+    <% if point.stargate %>(Stargate)<% end %>
+    <% if point.wormhole %>(Wormhole)<% end %>
+  </li>
+  <%
+    end
+  %>
+</ol>
+<p>
+  Total: <%=@path.tu_cost%> TUs
+</p>
+<textarea cols="40" rows="20">
+<%=@path.to_orders.map{|o| o.to_s}.join("\n")%>
+</textarea>
+<% else %>
+<p>No path found between <%=link_to @start_system, @start_system%> and <%=link_to @end_system, @end_system%>.</p>
+<% end %>
+<p>
+  Back to <%=link_to @start_system, @start_system%> |
+  <%=link_to @end_system, @end_system%>
+</p>

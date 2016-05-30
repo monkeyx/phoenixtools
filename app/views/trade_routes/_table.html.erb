@@ -1,0 +1,75 @@
+<table class="table">
+  <thead>
+  <% if trade_routes.empty? %>
+  <tr>
+    <td colspan="9"><strong>No trade routes available</strong></td>
+  </tr>
+  <% end %>
+  <% unless trade_routes.empty? %>
+  <tr>
+    <td colspan="9"><strong><%=h trade_routes.size %> trade routes available</strong></td>
+  </tr>
+  <% end %>
+  <% unless trade_routes.empty? %>
+  <tr>
+    <th>Route</th>
+    <th>Item</th>
+    <th>Seller</th>
+    <th>Buyer</th>
+    <th>Profit</th>
+    <th>Barge Assignments</th>
+    <th>Route</th>
+  </tr>
+  <% end %>
+</thead>
+<tbody>
+  <% route_count = 0 %>
+  <% trade_routes.each do |trade_route| %>
+  <% route_count += 1 %>
+  <tr>
+    <td class="<%=h trade_route.item.item_type%>">
+      <%=h route_count %>
+    </td>
+    <td class="<%=h trade_route.item.item_type%>">
+      <%=link_to trade_route.item, trade_route.item %>
+    </td>
+    <td class="<%=h trade_route.item.item_type%>">
+      <%=h trade_route.selling_quantity %> @ $<%=h trade_route.sellers_price %>ea.<br/>
+      <%=link_to trade_route.from, trade_route.from %>
+    </td>
+    <td class="<%=h trade_route.item.item_type%>">
+      <%=h trade_route.buying_quantity %> @ $<%=h trade_route.buyers_price %>ea.<br/>
+      <%=link_to trade_route.to, trade_route.to %>
+    </td>
+    <td class="<%=h trade_route.item.item_type%>">
+      $<%=h trade_route.profits_remaining%> of $<%=h trade_route.total_profit %> remaining
+      <br/>(Weekly Barge Profit: $<%=h trade_route.barge_weekly_profit%>)
+    </td>
+    <td class="<%=h trade_route.item.item_type%>" style="text-align: center">
+      <%=(trade_route.barges_assigned.nil? ? 0 : trade_route.barges_assigned)%> of <%=h trade_route.barges_max%>
+    </td>
+    <td>
+      <%=render :partial => '/trade_routes/route', :locals => {:trade_route => trade_route}%>
+      <% 
+      if @start_system
+        tu_cost = @start_system.time_to(trade_route.from.star_system) + trade_route.travel_time
+      else
+        tu_cost = trade_route.travel_time
+      end
+      %>
+      <ul><li><%=h tu_cost %>tus</li></ul>
+    </td>
+    <td style="vertical-align: middle">
+      <%
+      if @start_system
+        op = "#{orders_trade_route_path(trade_route)}?from=#{@start_system.id}"
+      else
+        op = orders_trade_route_path(trade_route)
+      end
+      %>
+      <%=link_to "Get Orders", op, :target => 'new', :class => 'btn btn-info' %>
+    </td>
+  </tr>
+  <% end %>
+</tbody>
+</table>

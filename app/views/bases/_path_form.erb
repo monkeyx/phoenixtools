@@ -1,0 +1,38 @@
+<table class="table">
+<%= form_tag path_to_base_bases_path, :method => :get  do %>
+  <tr>
+    <th>
+      From:
+    </th>
+    <td>
+      <%= select_tag "start_system",  options_from_collection_for_select(StarSystem.order('name ASC'), "id", "to_s", params[:start_system]) %>
+    </td>
+    <td style="vertical-align: top; ">
+      <%= submit_tag "Plot", :class => 'btn btn-info' %>
+    </td>
+  </tr>
+  <tr>
+    <% if base %>
+    <td colspan="2">
+    <%=hidden_field_tag :destination, base.id %>
+    </td>
+    <% else %>
+    <th>
+      Destination:
+    </th>
+    <td>
+      <%= select_tag "destination",  options_from_collection_for_select(::Base.starbases.order('name ASC'), "id", "to_s", params[:destination]) %>
+    </td>
+    <% end %>
+  </tr>
+  <tr>
+    <td colspan="2" align="right">
+      <% unless auto_squad %>
+      Squadron: <%=check_box_tag :squadron, 'yes', params[:squadron] %>
+      <% else %>
+      <%=hidden_field_tag :squadron, 'yes' %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+</table>

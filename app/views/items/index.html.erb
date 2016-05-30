@@ -1,0 +1,56 @@
+<% if params[:manufacturing] %>
+<% heading("Manufactured Items") %>
+<div class="btn-group">
+  <% if params[:xclude_one_offs].blank? %>
+  <%=link_to 'Exclude one-item blueprints', '?manufacturing=true&exclude_one_offs=true', :class => 'btn btn-info' %>
+  <% else %>
+  <%=link_to 'Include one-item blueprints', '?manufacturing=true', :class => 'btn btn-info' %>
+  <% end %>
+  <%=link_to 'Show all items', '/items', :class => 'btn btn-primary'  %>
+</div>
+<% elsif params[:race] %>
+<% heading("Trade Goods favoured by #{params[:race].pluralize}") %>
+  There are <%=@items.count%> items.
+  <%=render :partial => 'periphery_goods_form'%>
+  <%=render :partial => 'race_preferred_goods_form'%>
+  <%=link_to 'Show all items', '/items', :class => 'btn btn-primary' %>
+<% elsif params[:periphery] %>
+<% heading("Trade Goods from #{params[:periphery]}") %>
+  There are <%=@items.count%> items.
+  <%=render :partial => 'periphery_goods_form'%>
+  <%=render :partial => 'race_preferred_goods_form'%>
+  <%=link_to 'Show all items', '/items', :class => 'btn btn-primary' %>
+<% else %>
+<% heading("Items") %>
+<p>
+  There are <%=Item.count%> items of which <%=Item.unknown.size%> are unknown.
+  There are <%=link_to "#{Item.profitable_but_no_trade_route.size} profitable items with no trade routes", profitable_but_no_trade_route_items_path %>.
+  <%=link_to 'Show manufactured products only', '?manufacturing=true'%> | <%=link_to 'Suitable for a startup', '?manufacturing=true&startup=true'%>
+</p>
+<table class="table">
+  <tr>
+  <td>
+    <%=render :partial => 'periphery_goods_form'%>
+  </td>
+  <td>
+  <%=render :partial => 'race_preferred_goods_form'%>
+  </td>
+  </tr>
+</table>
+<% end %>
+<% if @paginate %>
+<div class="pagination">
+  <%= paginate @items %>
+</div>
+<% end %>
+<%=render :partial => 'table', :locals => {:items => @items, :show_nearest_aff_base => false, :show_stopping_point => false, :show_manufacturing => !params[:manufacturing].blank?} %>
+<% if @paginate %>
+<div class="pagination">
+  <%= paginate @items %>
+</div>
+<% end %>
+<br />
+
+<% if @middleman_orders %>
+<%=raw orders_box(@middleman_orders) %>
+<% end %>

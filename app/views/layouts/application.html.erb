@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Phoenixtools: <%= (content_for(:title) || 'Home') %></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="/css/themes/spacelab.css" rel="stylesheet">
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  
+  <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body role="document">
+	<%=render :partial => '/layouts/nav' %>
+  <% page_numbers = content_for(:page_numbers) %>
+  <div id="main" class="container" role="main">
+    <div class="page-header">
+      <h1><%=content_for(:heading)%></h1>
+    </div>
+    <div role="nav">
+      <%= content_for(:sub_nav)%>
+    </div>
+    <% if page_numbers %>
+    <div class="page-numbers center"><%=page_numbers%></div>
+    <% end %>
+    <%= render :partial => "/layouts/messages" %>
+    <!-- Start Content -->
+    <%= yield %>
+    <!-- End Content -->
+    <% if page_numbers %>
+    <div class="page-numbers center"><%=page_numbers%></div>
+    <% end %>
+	</div>
+	<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+	<script src="/js/bootstrap.min.js"></script>
+  <script src="/js/docs.min.js"></script>
+  <script><%=content_for(:jscript)%></script>
+</body>
+</html>

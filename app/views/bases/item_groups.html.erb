@@ -1,0 +1,5 @@
+<% title(@base.to_s) %>
+<% heading("#{@base.to_s} Item Groups") %>
+<%=render :partial => 'tabs', :locals => {:tab => 'item_groups'} %>
+
+<%=render :partial => 'item_groups', :locals => {:base => @base}%>

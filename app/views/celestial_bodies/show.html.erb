@@ -1,0 +1,80 @@
+<% heading(@celestial_body.to_s) %>
+<% title(@celestial_body.to_s) %>
+
+<p>
+  <b>Star system:</b>
+  <%= link_to @celestial_body.star_system, @celestial_body.star_system %>
+</p>
+
+<% if @celestial_body.unknown? %>
+<p>
+  <%=link_to "Fetch Data", fetch_celestial_body_path(@celestial_body), :class => 'btn btn-info' %>
+</p>
+<% else %>
+<p>
+  <b>GPI:</b>
+  <%=render :partial => 'gpi_form' %>
+</p>
+<% end %>
+
+<% unless @celestial_body.sectors.empty? %>
+<table cellspacing="0" cellpadding="0" border="0" rowspacing="0" style="padding: 0">
+  <%
+    y = @celestial_body.height+1
+    while y >= 0 do
+    %>
+    <% if y > @celestial_body.height || y < 1%>
+    <tr style="margin: 0; padding: 0;">
+      <td></td>
+      <% (1..(@celestial_body.width)).each do |x| %>
+      <td>
+        <%=x%>
+      </td>
+      <% end %>
+      <td></td>
+    </tr>
+    <% else %>
+    <tr style="margin: 0; padding: 0;">
+      <td><%=y%></td>
+      <% (1..(@celestial_body.width)).each do |x|
+        sq = @celestial_body.map_square(x,y)
+        # Kernel.p "#{@celestial_body} - \{#{x},#{y}\} - #{sq}"
+      %>
+      <td>
+        <%=image_tag sq.gif, :alt => "#{sq.terrain} (#{x},#{y})", :title => "#{sq.terrain} (#{x},#{y})"%>
+      </td>
+      <% end %>
+      <td><%=y%></td>
+    </tr>
+    <% end %>
+  <%
+      y -= 1
+    end %>
+</table>
+
+<table class="table">
+  <tr>
+    <th>Terran</th>
+    <th>Sectors</th>
+  </tr>
+  <% @celestial_body.terrain_types.each do |terrain, quantity| %>
+  <tr>
+    <td><%=terrain%></td>
+    <td><%=quantity%></td>
+  </tr>
+  <% end %>
+</table>
+<% end %>
+<br/>
+<% unless @celestial_body.celestial_body_attributes.empty? %>
+<table class="table">
+  <% @celestial_body.celestial_body_attributes.each do |cbi| %>
+  <tr>
+    <th><%=h cbi.attr_key %></th>
+    <td>
+      <%=h cbi.attr_value %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+<% end %>

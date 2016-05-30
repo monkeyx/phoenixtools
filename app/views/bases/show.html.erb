@@ -1,0 +1,171 @@
+<% title(@base.to_s) %>
+<% heading(@base.to_s) %>
+<%=render :partial => 'tabs', :locals => {:tab => 'overview'} %>
+
+<% if @base.star_system %>
+<p>
+  <b>Location:</b>
+  <%=link_to @base.celestial_body, @base.celestial_body %>, <%=link_to @base.star_system, @base.star_system %>
+</p>
+<p>
+  Calculate shortest path:
+  <%=render :partial => 'path_form', :locals => {:base => @base, :auto_squad => false} %>
+</p>
+<% end %>
+
+<% if @base.outpost? && @base.hub %>
+<p>
+Hub: <%=link_to(@base.hub, @base.hub) %>
+</p>
+<% end %>
+
+<table class="table">
+<thead>
+  <tr>
+    <th>Hiports</th>
+    <th>Patches</th>
+    <th>Docks</th>
+    <th>Maintenance</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><%= @base.hiports %></td>
+    <td><%= @base.patches %></td>
+    <td><%= @base.docks %></td>
+    <td><%= @base.maintenance %></td>
+  </tr>
+</tbody>
+</table>
+
+<% if @base.trade_good_max_income %>
+<table class="table">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Max Income</th>
+    <th>Value per MU</th>
+    <th>Low Value</th>
+    <th>High Value</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <th>Trade Goods</th>
+    <td><%=@base.trade_good_max_income%></td>
+    <td><%=@base.trade_good_value_per_mu%></td>
+    <td><%=@base.trade_good_low_value%></td>
+    <td><%=@base.trade_good_high_value%></td>
+  </tr>
+  <tr>
+    <th>Drugs</th>
+    <td><%=@base.drug_max_income%></td>
+    <td><%=@base.drug_value_per_mu%></td>
+    <td><%=@base.drug_low_value%></td>
+    <td><%=@base.drug_high_value%></td>
+  </tr>
+  <tr>
+    <th>Life Goods</th>
+    <td><%=@base.life_good_max_income%></td>
+    <td><%=@base.life_good_value_per_mu%></td>
+    <td><%=@base.life_good_low_value%></td>
+    <td><%=@base.life_good_high_value%></td>
+  </tr>
+  <tr>
+    <th>Race</th>
+    <td colspan="4"><%=@base.race%></td>
+  </tr>
+</tbody>
+</table>
+<% end %>
+
+<h2>Trade Routes</h2>
+<%=render :partial => '/trade_routes/table', :locals => {:trade_routes => @base.starting_trade_routes} %>
+
+<h2>Buying</h2>
+<% if @base.market_buys.empty? %>
+<p>None</p>
+<% else %>
+<table class="table">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Best Seller</th>
+    <th>Profit</th>
+  </tr>
+</thead>
+<tbody>
+  <% @base.market_buys.each do |mi| %>
+  <tr>
+    <td>
+      <% if mi.item.is_best_buyer?(@base) %>
+      <span style="color: green">BEST</span>
+      <% end %>
+    </td>
+    <td><%=link_to mi.item, mi.item %></td>
+    <td><%=mi.quantity %></td>
+    <td>$<%=mi.price %></td>
+    <% if mi.item.best_seller %>
+    <td>
+       <%=link_to "#{mi.item.best_seller.base} @ $#{mi.item.best_seller.price}", mi.item.best_seller.base%>
+    </td>
+    <td>
+      $<%=(mi.price - mi.item.best_seller.price).round(2) %>
+    </td>
+    <% else %>
+    <td colspan="2">
+      &nbsp;
+    </td>
+    <% end %>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>
+
+<h2>Selling</h2>
+<% if @base.market_sells.empty? %>
+<p>None</p>
+<% else %>
+<table class="table">
+  <thead>
+  <tr>
+    <th></th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Best Buyer</th>
+    <th>Profit</th>
+  </tr>
+</thead>
+<tbody>
+  <% @base.market_sells.each do |mi| %>
+  <tr>
+    <td>
+      <% if mi.item.is_best_seller?(@base) %>
+      <span style="color: green">BEST</span>
+      <% end %>
+    </td>
+    <td><%=link_to mi.item, mi.item %></td>
+    <td><%=mi.quantity %></td>
+    <td>$<%=mi.price %></td>
+    <% if mi.item.best_buyer %>
+    <td>
+      <%=link_to "#{mi.item.best_buyer.base} @ $#{mi.item.best_buyer.price}", mi.item.best_buyer.base%>
+    </td>
+    <td>
+      $<%=(mi.item.best_buyer.price - mi.price).round(2)%>
+    </td>
+    <% else %>
+    <td colspan="2">
+      &nbsp;
+    </td>
+    <% end %>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>

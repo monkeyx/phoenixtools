@@ -1,0 +1,101 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Mass</th>
+    <th>Item type</th>
+    <th>Best Seller</th>
+    <th>Best Buyer</th>
+    <th>Best Profit</th>
+    <% if show_manufacturing %>
+    <th>Manufacturing Cost</th>
+    <th>RRP</th>
+    <th>Profit</th>
+    <th>ROI</th>
+    <th>Items / Blueprint</th>
+    <% end %>
+    <% if show_stopping_point %>
+    <th>Stopping Point</th>
+    <% end %>
+  </tr>
+</thead>
+<tbody>
+
+<% items.each do |item| %>
+  <tr>
+    <td><%= link_to item, item %></td>
+    <td><%= item.mass %></td>
+    <td><%= item.item_type %></td>
+    <% if item.best_seller %>
+    <td>
+        <%=link_to "#{item.best_seller.base} @ $#{item.best_seller.price}", item.best_seller.base%>
+        <% if item.best_seller.base.star_system %>
+        in <%=link_to item.best_seller.base.star_system, item.best_seller.base.star_system%>
+        <% end %>
+        <% if show_nearest_aff_base
+          nearest_sb = item.best_seller.base.find_nearest_affiliation_base
+        %>
+        <br/>(Nearest DEN base: <%=link_to nearest_sb, nearest_sb%>)
+        <% end %>
+    </td>
+    <% else %>
+    <td>N/A</td>
+    <% end %>
+    <% if item.best_buyer %>
+    <td>
+      <%=link_to "#{item.best_buyer.base} @ $#{item.best_buyer.price}", item.best_buyer.base%>
+      <% if item.best_buyer.base.star_system %>
+      in <%=link_to item.best_buyer.base.star_system, item.best_buyer.base.star_system%>
+      <% end %>
+      <% if show_nearest_aff_base
+        nearest_sb = item.best_buyer.base.find_nearest_affiliation_base
+      %>
+      <br/>(Nearest DEN base: <%=link_to nearest_sb, nearest_sb%>)
+      <% end %>
+    </td>
+    <% else %>
+    <td>N/A</td>
+    <% end %>
+    <td>
+      $<%=item.best_profit%>
+    </td>
+    <% if show_manufacturing %>
+      <% if item.producable? %>
+    <td><%=number_to_currency(item.estimated_production_cost)%></td>
+    <td><%=number_to_currency(item.rrp)%></td>
+    <td><%=number_to_currency(item.manufacturers_profit)%></td>
+    <td><%=item.ROI%></td>
+    <td><%=item.items_per_blueprint%></td>
+      <% else %>
+      <td colspan="4">&nsbp;</td>
+      <% end %>
+    <% end %>
+    <% if show_stopping_point
+      stopping_points = item.best_seller.base.nearest_stopping_points(item.best_buyer.base)
+    %>
+    <td>
+      <% if stopping_points 
+        count = 0
+      %>
+      <ol>
+        <% stopping_points.each do |sp| %>
+        <% unless count > 2 %>
+        <li>
+        <%=link_to sp, sp %> <%=link_to "Middleman", "/bases/#{sp.id}/middleman?item=#{item.id}", :class => 'btn btn-primary' %>
+        </li>
+        <% end
+          count += 1
+        end %>
+      </ol>
+      <% else %>
+      None
+      <% end %>
+    </td>
+    <% end %>
+    <% if item.unknown? %>
+    <td><%=link_to "Fetch Data", fetch_item_url(item), :method => :post, :class => 'btn btn-info' %></td>
+    <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>

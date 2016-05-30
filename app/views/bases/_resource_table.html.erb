@@ -1,0 +1,40 @@
+<% unless item_resources.empty? %>
+<table class="table">
+  <thead>
+  <tr>
+    <% if @item %>
+    <th>Location</th>
+    <% end %>
+    <th>Complexes</th>
+    <% unless @item %>
+    <th>Item</th>
+    <% end %>
+    <th>Output</th>
+    <th>Resource ID</th>
+    <th>Yield</th>
+    <th>10% Drop</th>
+    <th>Size</th>
+    <th>Next Complex</th>
+  </tr>
+</thead>
+<tbody>
+  <% item_resources.each do |ir| %>
+    <tr>
+      <% if @item %>
+      <td align="center" class="<%=ir.css_class%>"><%=link_to(ir.base, ir.base)%></td>
+      <% end %>
+      <td align="center" class="<%=ir.css_class%>"><%=ir.complexes%> / <%=ir.max_complexes%></td>
+      <% unless @item %>
+      <td align="center" class="<%=ir.css_class%>"><%=link_to ir.item, ir.item%></td>
+      <% end %>
+      <td align="center" class="<%=ir.css_class%>"><%=ir.current_output%></td>
+      <td class="<%=ir.css_class%>"><%=ir.resource_id%></td>
+      <td class="<%=ir.css_class%>"><%=ir.resource_yield %></td>
+      <td align="center" class="<%=ir.css_class%>"><%=ir.resource_drop %></td>
+      <td class="<%=ir.css_class%>"><%=(ir.resource_size != -999 ? ir.resource_size : 'Infinite')%></td>
+      <td align="center" class="<%=ir.css_class%>"><%=ir.next_complex_output%></td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+<% end %>

@@ -1,0 +1,10 @@
+<% title("Trade Routes") %>
+
+<% if @trade_routes.size > 0 %>
+<%=render :partial => 'find_form' %>
+<%=render :partial => 'table', :locals => {:trade_routes => @trade_routes} %>
+<% else %>
+<p>
+  No trade routes available.
+</p>
+<% end %>

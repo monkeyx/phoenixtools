@@ -1,0 +1,15 @@
+<table class="table">
+<%= form_tag "/celestial_bodies/#{@celestial_body.id}/gpi", :method => :get  do %>
+  <tr>
+    <th>
+      Number of Ships:
+    </th>
+    <td>
+      <%= select_tag "ships",  options_for_select((1..30).to_a, params[:start]) %>
+    </td>
+    <td style="vertical-align: top; ">
+      <%= submit_tag "GPI Orders", :class => 'btn btn-info' %>
+    </td>
+  </tr>
+<% end %>
+</table>

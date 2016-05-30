@@ -1,0 +1,29 @@
+<ol>
+  <% if @start_system && @start_system != trade_route.from.star_system
+  %>
+    <li class="<%=@start_system.css_class%>"><%=link_to @start_system, @start_system %> <% if @start_system == trade_route.from.star_system %>{<%=link_to trade_route.from, trade_route.from%>}<% end %></li>
+  <%
+    @start_system.path_to(trade_route.from.star_system).path_points.each do |point|
+      %>
+  <li class="<%=point.to.css_class%>"><%=link_to point.to, point.to%>
+    <% if point.stargate %>(Stargate)<% end %>
+    <% if point.wormhole %>(Wormhole)<% end %>
+    <% if point.to == trade_route.from.star_system %>{<%=link_to trade_route.from, trade_route.from%>}<% end %>
+  </li>
+  <%
+    end
+    else
+  %>
+  <% unless trade_route.from.star_system.nil? %>
+  <li><%=link_to trade_route.from.star_system, trade_route.from.star_system%> {<%=link_to trade_route.from, trade_route.from %>}</li>
+  <% end %>
+  <%
+  end  %>
+  <% trade_route.path.path_points.each do |point| %>
+  <li><%=link_to point.to, point.to%>
+    <% if point.stargate %>(Stargate)<% end %>
+    <% if point.wormhole %>(Wormhole)<% end %>
+    <% if point.to == trade_route.to.star_system %>{<%=link_to trade_route.to, trade_route.to%>}<% end %>
+  </li>
+  <% end unless trade_route.path.nil? %>
+</ol>

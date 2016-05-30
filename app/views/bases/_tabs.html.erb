@@ -1,0 +1,17 @@
+<% content_for(:sub_nav) do %>
+<ul class="nav nav-tabs">
+<% if @base.own_aff? %>
+  <li class="<%=tab == 'overview' ? 'active' : ''%>"><%=link_to "Overview", "/bases/#{@base.id}" %></li>
+  <li class="<%=tab == 'fetch_turn' ? 'active' : ''%>"><%=link_to "Fetch Turns", "/bases/#{@base.id}/fetch_turn" %></li>
+  <li class="<%=tab == 'inventory' ? 'active' : ''%>"><%=link_to "Inventory Report", "/bases/#{@base.id}/inventory" %></li>
+  <li class="<%=tab == 'item_groups' ? 'active' : ''%>"><%=link_to "Item Groups", "/bases/#{@base.id}/item_groups" %></li>
+  <li class="<%=tab == 'resource_production' ? 'active' : ''%>"><%=link_to 'Resource Production', "/bases/#{@base.id}/resource_production"%></li>
+  <% if @base.starbase? %>
+  <li class="<%=tab == 'trade_items_report' ? 'active' : ''%>"><%=link_to "Trade Items Report", "/bases/#{@base.id}/trade_items_report" %></li>
+  <li class="<%=tab == 'competitive_buys' ? 'active' : ''%>"><%=link_to "Competitive Market Buy Report", "/bases/#{@base.id}/competitive_buys"%></li>
+  <li class="<%=tab == 'mass_production' ? 'active' : ''%>"><%=link_to 'Mass Production', "/bases/#{@base.id}/mass_production"%></li>
+  <li class="<%=tab == 'outposts' ? 'active' : ''%>"><%=link_to 'Outposts', "/bases/#{@base.id}/outposts"%></li>
+  <% end %>
+<% end %>
+</ul>
+<% end %>
