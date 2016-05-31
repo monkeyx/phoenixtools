@@ -107,6 +107,7 @@ class CelestialBody < ActiveRecord::Base
 			    		key = nil
 			  		else
 			    		key = n.content.strip
+			    		key.slice!(key.length - 1) if key[-1, 1] == ':'
 			  		end
 				end
 				if values.empty?
@@ -178,7 +179,15 @@ class CelestialBody < ActiveRecord::Base
 			unless attr_params[:key].blank? 
 				op = attr_params[:op].strip
 				if op == '='
-				  value_syntax = 'celestial_body_attributes.attr_value = ?'
+				  value_syntax = 'celestial_body_attributes.attr_value = ? || cast(celestial_body_attributes.attr_value as float)  = ?'
+				elsif op == '<'
+					value_syntax = 'cast(celestial_body_attributes.attr_value as float) < ?'
+				elsif op == '>='
+					value_syntax = 'cast(celestial_body_attributes.attr_value as float) >= ?'
+				elsif op == '>'
+					value_syntax = 'cast(celestial_body_attributes.attr_value as float) > ?'
+				elsif op == '<='
+					value_syntax = 'cast(celestial_body_attributes.attr_value as float) <= ?'
 				elsif op == 'LIKE'
 				  value_syntax = "(celestial_body_attributes.attr_value = ? OR celestial_body_attributes.attr_value LIKE '%#{attr_params[:value]}%')"
 				elsif op == 'NOT LIKE'
@@ -207,9 +216,9 @@ class CelestialBody < ActiveRecord::Base
 	  end
 
 	  def set_cbody_attribute_value!(key,val)
-	    attr = CelestialBodyAttribute.where(celestial_body_id: self.id, attr_key: key).first
+	  	attr = CelestialBodyAttribute.where(celestial_body_id: self.id, attr_key: key).first
 	    attr ||= CelestialBodyAttribute.create(celestial_body_id: self.id, attr_key: key)
-	    attr.attr_value = val
+	    attr.attr_value = format_cbody_attribute_val(key, val)
 	    attr.save!
 	    self
 	  end
@@ -228,5 +237,28 @@ class CelestialBody < ActiveRecord::Base
 		x = parts2[0].strip.to_i
 		y = parts2[1].gsub(')','').strip.to_i
 		return name,x,y
+	end
+
+	def format_cbody_attribute_val(key, val)
+		case key
+		when 'Gravity rating'
+			return val ? val[0, val.length - 1] : '0'
+		when 'Temperature'
+			return val ? val : '0'
+		when 'Optical Depth'
+			return val ? val : '0'
+		when 'Natural Shielding'
+			return val ? val : '0'
+		when 'Radiation'
+			return val ? val : '0'
+		when 'Tectonic Activity'
+			return val ? val : '0'
+		when 'TerraForming'
+			return val ? val == 'None' ? '0' : val : '0'
+		when 'Profile'
+			return val ? val[0, val.length - 1] : '0'
+		else
+			return val
+		end
 	end
 end

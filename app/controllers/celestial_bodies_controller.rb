@@ -46,7 +46,6 @@ class CelestialBodiesController < ApplicationController
         params[:cbody_attributes].each do |ca|
           key = ca['key']
           unless key.blank?
-            key = key + ':' unless key[-1,1] == ':' || key == 'Radiation' || key.index('(')
             @attributes << {:key => key, :value => ca['value'], :op => ca['op']}
           end
         end
