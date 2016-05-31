@@ -13,15 +13,19 @@ class NexusXMLClient
 		e_data_types.xpath('.//type').each do |e_data_type|
 			if e_data_type['name'] == 'Items'
 				Nexus.config.update_attributes!(:setup_notice => "Adding known items")
+				Rails.logger.info "Adding known items"
 				parse_items!(e_data_type)
 			elsif e_data_type['name'] == 'Systems'
 				Nexus.config.update_attributes!(:setup_notice => "Adding known star systems")
+				Rails.logger.info "Adding known star systems"
 				parse_star_systems!(e_data_type)
 			elsif e_data_type['name'] == 'Affiliation'
 				Nexus.config.update_attributes!(:setup_notice => "Adding known affilitions")
+				Rails.logger.info "Adding known affilitions"
 				parse_affiliations!(e_data_type)
 			elsif e_data_type['name'] == 'Item Type'
 				Nexus.config.update_attributes!(:setup_notice => "Adding known item types")
+				Rails.logger.info "Adding known item types"
 				parse_item_types!(e_data_type)
 			end
 		end
@@ -30,7 +34,7 @@ class NexusXMLClient
 	end
 
 	def fetch_positions!
-		Rails.logger.info "Fetching positions data..."
+		Rails.logger.info "Fetching positions data"
 		Nexus.config.update_attributes!(:setup_notice => "Fetching owned positions", :update_notice => "Fetching owned positions")
 		doc = doc('pos_list')
 		puts doc
@@ -59,10 +63,10 @@ class NexusXMLClient
 		else
 			loc = a[0]
 		end
-		Rails.logger.info "LOC = #{loc} SYS_LOC = #{sys_loc} SYS_NAME = #{sys_name}"
+		Rails.logger.debug "LOC = #{loc} SYS_LOC = #{sys_loc} SYS_NAME = #{sys_name}"
 		if sys_name
 			sys_id = sys_name.split('(')[1].gsub(')','').to_i
-			Rails.logger.info "SYS ID = #{sys_id}"
+			Rails.logger.debug "SYS ID = #{sys_id}"
 			p.star_system = StarSystem.find_by_id(sys_id)
 		end
 		if sys_loc && sys_loc.include?('Quadrant') && (sys_loc = sys_loc.gsub('Quadrant','').strip)
@@ -75,18 +79,18 @@ class NexusXMLClient
 				p.landed = true
 				if loc.include?('Landed')
 					cbody_id = loc.split('(')[1].split(')')[0].to_i
-					Rails.logger.info "CBODY = #{cbody_id}"
+					Rails.logger.debug "CBODY = #{cbody_id}"
 					p.celestial_body = CelestialBody.cbody(sys_id, cbody_id) if sys_id
 				elsif loc.include?('Docked')
 					base_id = loc.split('(')[1].split(')')[0].to_i
-					Rails.logger.info "BASE ID = #{base_id}"
+					Rails.logger.debug "BASE ID = #{base_id}"
 					b = Base.find_by_id(base_id)
 					p.celestial_body = b.celestial_body if b
 				end
 			elsif loc.include?('Orbit')
 				p.orbit = true
 				cbody_id = loc.split('(')[1].split(')')[0].to_i
-				Rails.logger.info "CBODY = #{cbody_id}"
+				Rails.logger.debug "CBODY = #{cbody_id}"
 				p.celestial_body = CelestialBody.cbody(sys_id, cbody_id) if sys_id
 			end
 		end
