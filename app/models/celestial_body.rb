@@ -179,7 +179,7 @@ class CelestialBody < ActiveRecord::Base
 			unless attr_params[:key].blank? 
 				op = attr_params[:op].strip
 				if op == '='
-				  value_syntax = 'celestial_body_attributes.attr_value = ? || cast(celestial_body_attributes.attr_value as float)  = ?'
+				  value_syntax = 'cast(celestial_body_attributes.attr_value as float)  = ?'
 				elsif op == '<'
 					value_syntax = 'cast(celestial_body_attributes.attr_value as float) < ?'
 				elsif op == '>='
