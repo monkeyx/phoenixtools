@@ -6,7 +6,7 @@
   <%=form_tag "/bases/#{base.id}/set_item_group" do %>
     <%=hidden_field_tag "item_group",  item_group[:group_name] %>
     <b>Item Group: <%=item_group[:group_name]%> (<%=item_group[:group_id]%>)</b>
-      <%=render :partial => '/Base_items/table', :locals => {:items => item_group[:items], :show_Base => false, :quantity_to_current => true}%>
+      <%=render :partial => '/base_items/table', :locals => {:items => item_group[:items], :show_Base => false, :quantity_to_current => true}%>
     <%=submit_tag "Update Group" %>
     <p>
       Total Mass: <%=(item_group[:total_mass])%> mus. 
