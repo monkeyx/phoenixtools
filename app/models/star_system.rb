@@ -41,6 +41,14 @@ class StarSystem < ActiveRecord::Base
 		Path.star_system(self).destroy_all
 	end
 
+	def paths
+		Path.star_system(self)
+	end
+
+	def has_paths?
+		paths.any?
+	end
+
 	def to_s
 		"#{self.name} (#{self.id})"
 	end

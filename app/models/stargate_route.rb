@@ -9,4 +9,8 @@ class StargateRoute < ActiveRecord::Base
 	def star_system
 		self.from
 	end
+
+	def known?
+		self.from && self.to
+	end
 end

@@ -8,12 +8,18 @@ class Wormhole < ActiveRecord::Base
 	    return if Wormhole.exists?(star_system_id: a_id, to_id: b_id)
 	    unless cba = CelestialBody.where(star_system_id: a_id, cbody_id: cbody_a).first
 	    	cba = CelestialBody.create!(:star_system_id => a_id, :cbody_id => cbody_a, :name => 'Wormhole', :cbody_type => 'Wormhole') 
-	    end
+	    	cbody_a = cba.id
+	    end if cbody_a > 0
 	    unless cbb = CelestialBody.where(star_system_id: b_id, cbody_id: cbody_b).first
 	    	cbb = CelestialBody.create!(:star_system_id => b_id, :cbody_id => cbody_b, :name => 'Wormhole', :cbody_type => 'Wormhole') 
-	    end
-	    Wormhole.create!(:star_system_id => a_id, :to_id => b_id, :celestial_body_id => cba.id)
-	    Wormhole.create!(:star_system_id => b_id, :to_id => a_id, :celestial_body_id => cbb.id)
+	    	cbody_b = cbb.id
+	    end if cbody_b > 0
+	    Wormhole.create!(:star_system_id => a_id, :to_id => b_id, :celestial_body_id => cbody_a)
+	    Wormhole.create!(:star_system_id => b_id, :to_id => a_id, :celestial_body_id => cbody_b)
+	end
+
+	def known?
+		self.to && self.star_system
 	end
 
 	def to_s

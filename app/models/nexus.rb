@@ -109,6 +109,7 @@ class Nexus < ActiveRecord::Base
 	def setup_known_stargates_and_wormholes!
 		# STARGATES
 		update_attributes!(:setup_notice => "Adding known stargates")
+		Stargate.destroy_all
 		Rails.logger.info "Adding known stargates"
 		Stargate.link_systems!(61,103, 5069, 1600)
 		Stargate.link_systems!(103,186, 1600, 564)
@@ -126,12 +127,14 @@ class Nexus < ActiveRecord::Base
 		# WORMHOLES
 		update_attributes!(:setup_notice => "Adding known wormholes")
 		Rails.logger.info "Adding known wormholes"
-		Wormhole.link_systems!(99,41,2231,0)
-		Wormhole.link_systems!(6,9,3318,0)
+		Wormhole.destroy_all
+		Wormhole.link_systems!(99,41,2231,565)
+		Wormhole.link_systems!(6,9,3318,7637)
 		Wormhole.link_systems!(17,104,0,8422)
 		Wormhole.link_systems!(10,11,4562,2197)
 		Wormhole.link_systems!(198,146,9890,3102)
 		Wormhole.link_systems!(29,79,3236,6863)
+		Wormhole.link_systems!(55,209,6735,2324)
 	end
 
 	def setup!

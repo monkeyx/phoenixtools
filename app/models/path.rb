@@ -16,6 +16,7 @@ class Path < ActiveRecord::Base
 	scope :star_system, ->(star_system) { where(["from_id = ? OR to_id = ?", star_system.id, star_system.id])}
 	scope :from_system, ->(star_system) { where(from_id: star_system.id)}
 	scope :to_system, ->(star_system) { where(to_id: star_system.id)}
+	scope :empty, -> { where(tu_cost: 0)}
 
 	def to_s
 		"#{self.from}->#{self.to}"
@@ -33,8 +34,8 @@ class Path < ActiveRecord::Base
 	end
 
 	def self.generate!
-		#    Path.destroy_all
-		#    PathPoint.destroy_all
+		Path.destroy_all
+		PathPoint.destroy_all
 
 		Rails.logger.info "Generating navigation paths..."
 		StarSystem.all.each do |from|
@@ -45,23 +46,32 @@ class Path < ActiveRecord::Base
 	end
 
 	def self.make_path!(start_system, target_system, path)
-		p = Path.create!(:from_id => start_system.id, :to_id => target_system.id, :tu_cost => 0)
-		sequence = 0
-		path.each do |point|
-		  sequence += 1
-		  if point.is_a?(JumpLink)
-		    p.tu_cost += JUMP_COST
-		    pp = PathPoint.create!(:path_id => p.id, :jump_link_id => point.id, :sequence => sequence)
-		  elsif point.is_a?(Stargate)
-		    p.tu_cost += STARGATE_COST
-		    pp = PathPoint.create!(:path_id => p.id, :stargate_id => point.id, :sequence => sequence)
-		  elsif point.is_a?(Wormhole)
-		    p.tu_cost += WORMHOLE_COST
-		    pp = PathPoint.create!(:path_id => p.id, :wormhole_id => point.id, :sequence => sequence)
-		  end
+		transaction do
+			if path.empty?
+				raise "Path #{start_system} to #{target_system} is empty"
+			end
+			puts ''
+			p = Path.create!(:from_id => start_system.id, :to_id => target_system.id, :tu_cost => 0)
+			sequence = 0
+			path.each do |point|
+			  sequence += 1
+			  if point.is_a?(JumpLink)
+			    p.tu_cost += JUMP_COST
+			    pp = PathPoint.create!(:path_id => p.id, :jump_link_id => point.id, :sequence => sequence)
+			  elsif point.is_a?(Stargate)
+			    p.tu_cost += STARGATE_COST
+			    pp = PathPoint.create!(:path_id => p.id, :stargate_id => point.id, :sequence => sequence)
+			  elsif point.is_a?(Wormhole)
+			    p.tu_cost += WORMHOLE_COST
+			    pp = PathPoint.create!(:path_id => p.id, :wormhole_id => point.id, :sequence => sequence)
+			  end
+			  print '.'
+			end
+			p.save!
+			puts ''
+			#puts "Created path between #{start_system} to #{target_system} in #{p.tu_cost}TU over #{p.path_points.size} points"
+			Rails.logger.info "Created path between #{start_system} to #{target_system} in #{p.tu_cost}TU over #{p.path_points.size} points"
 		end
-		p.save!
-		Rails.logger.info "Created path between #{start_system} to #{target_system} in #{p.tu_cost}TU over #{p.path_points.size} points"
 	end
 
 	def self.generate_paths!(start_system, path = [], tu_cost = 0)
@@ -80,8 +90,8 @@ class Path < ActiveRecord::Base
 		    path_copy << point
 		    tu_cost = calculate_path_tu_cost(path_copy)
 		    quickest_so_far = find_shortest_time(start_system, point.to)
-		    if quickest_so_far.nil? || quickest_so_far > tu_cost
-		      make_path!(start_system, point.to, path_copy)
+		    if (quickest_so_far.nil? || quickest_so_far > tu_cost)
+		      make_path!(start_system, point.to, path_copy) if !path_copy.empty?
 		      generate_paths!(start_system, path_copy, tu_cost)
 		    end
 		  end
@@ -94,10 +104,10 @@ class Path < ActiveRecord::Base
 		  potential_points << jump unless jump.to.nil? || jump.to == previous_system
 		end
 		StargateRoute.where(from_id: from.id).each do |gate|
-			potential_points << gate unless gate.to.nil? || gate.to == previous_system
+			potential_points << gate unless !gate.known? || gate.to.nil? || gate.to == previous_system
 		end
 		Wormhole.where(star_system_id: from.id).each do |wormhole|
-		  potential_points << wormhole unless wormhole.to.nil? || wormhole.to == previous_system
+		  potential_points << wormhole unless !wormhole.known? || wormhole.to.nil? || wormhole.to == previous_system
 		end
 		potential_points
 	end
