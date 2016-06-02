@@ -69,23 +69,23 @@ class Path < ActiveRecord::Base
 			end
 			p.save!
 			puts ''
-			#puts "Created path between #{start_system} to #{target_system} in #{p.tu_cost}TU over #{p.path_points.size} points"
-			Rails.logger.info "Created path between #{start_system} to #{target_system} in #{p.tu_cost}TU over #{p.path_points.size} points"
+			Rails.logger.info "Path: #{start_system} -> #{target_system}: #{p.tu_cost}TU / #{p.path_points.size} points"
 		end
 	end
 
 	def self.generate_paths!(start_system, path = [], tu_cost = 0)
-		return if path.size >= MAX_PATH_POINTS # 1st sanity break out of iteration
+		return if start_system.nil?
+		return if path.length >= MAX_PATH_POINTS # 1st sanity break out of iteration
 		return if tu_cost >= MAX_TU # 2nd sanity check
 
-		if path.size > 0
+		if path.length > 0
 		  pp = potential_path_points(path.last.to, path.last.star_system)
 		else
 		  pp = potential_path_points(start_system)
 		end
 
 		pp.each do |point|
-		  unless point.to == start_system
+		  unless point.to_id == start_system.id
 		    path_copy = Array.new(path)
 		    path_copy << point
 		    tu_cost = calculate_path_tu_cost(path_copy)
@@ -100,16 +100,27 @@ class Path < ActiveRecord::Base
 
 	def self.potential_path_points(from, previous_system=nil)
 		potential_points = []
+		previous_system_id = previous_system ? previous_system.id : 0
 		JumpLink.where(from_id: from.id).each do |jump|
-		  potential_points << jump unless jump.to.nil? || jump.to == previous_system
+		  potential_points << jump if check_potential_point(from, jump, potential_points, previous_system)
 		end
-		StargateRoute.where(from_id: from.id).each do |gate|
-			potential_points << gate unless !gate.known? || gate.to.nil? || gate.to == previous_system
+		StargateRoute.where(from_id: from.id).each do |gate_route|
+			potential_points << gate_route if check_potential_point(from, gate_route, potential_points, previous_system)
 		end
 		Wormhole.where(star_system_id: from.id).each do |wormhole|
-		  potential_points << wormhole unless !wormhole.known? || wormhole.to.nil? || wormhole.to == previous_system
+		  potential_points << wormhole if check_potential_point(from, wormhole, potential_points, previous_system)
 		end
 		potential_points
+	end
+
+	def self.check_potential_point(from, point, list, previous_system)
+		return false if point.to.nil?
+		return false unless point.known?
+		return false if previous_system && previous_system.id == point.to_id
+		return false if list.any? do |previous_point|
+			previous_point.to_id == point.to_id || previous_point.from_id == point.to_id
+		end
+		true
 	end
 
 	def requires_gate_keys?
@@ -122,7 +133,7 @@ class Path < ActiveRecord::Base
 		if squadron
 		  orders << PhoenixOrder.wait_for_tus(240)
 		  orders << PhoenixOrder.squadron_start
-		  self.path_points.each do |point|
+		  self.path_points.order('sequence ASC').each do |point|
 		    if point.jump_link && (previous_point.nil? || !previous_point.jump_link)
 		      orders << PhoenixOrder.move_to_random_jump_quad
 		    end
@@ -135,7 +146,7 @@ class Path < ActiveRecord::Base
 		    orders = orders[0..(orders.size - 2)]
 		  end
 		else
-		  self.path_points.each do |point|
+		  self.path_points.order('sequence asc').each do |point|
 		    orders << PhoenixOrder.move_to_random_jump_quad if point.jump_link && (previous_point.nil? || !previous_point.jump_link)
 		    orders = point.add_orders(orders)
 		    previous_point = point

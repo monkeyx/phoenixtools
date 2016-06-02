@@ -3,7 +3,7 @@
   %>
     <li class="<%=@start_system.css_class%>"><%=link_to @start_system, @start_system %> <% if @start_system == trade_route.from.star_system %>{<%=link_to trade_route.from, trade_route.from%>}<% end %></li>
   <%
-    @start_system.path_to(trade_route.from.star_system).path_points.each do |point|
+    @start_system.path_to(trade_route.from.star_system).path_points.order('sequence ASC').each do |point|
       %>
   <li class="<%=point.to.css_class%>"><%=link_to point.to, point.to%>
     <% if point.stargate %>(Stargate)<% end %>
@@ -19,7 +19,7 @@
   <% end %>
   <%
   end  %>
-  <% trade_route.path.path_points.each do |point| %>
+  <% trade_route.path.path_points.order('sequence ASC').each do |point| %>
   <li><%=link_to point.to, point.to%>
     <% if point.stargate %>(Stargate)<% end %>
     <% if point.wormhole %>(Wormhole)<% end %>

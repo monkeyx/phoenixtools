@@ -19,6 +19,10 @@ class JumpLink < ActiveRecord::Base
 		self.from
 	end
 
+	def known?
+		!from.nil? && !to.nil?
+	end
+
 	def self.link_systems!(a, b, jumps=1)
 		return if JumpLink.exists?(from_id: a.id, to_id: b.id, jumps: jumps)
 		JumpLink.create!(:from_id => a.id, :to_id => b.id, :jumps => jumps)

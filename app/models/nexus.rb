@@ -110,6 +110,7 @@ class Nexus < ActiveRecord::Base
 		# STARGATES
 		update_attributes!(:setup_notice => "Adding known stargates")
 		Stargate.destroy_all
+		StargateRoute.destroy_all
 		Rails.logger.info "Adding known stargates"
 		Stargate.link_systems!(61,103, 5069, 1600)
 		Stargate.link_systems!(103,186, 1600, 564)
