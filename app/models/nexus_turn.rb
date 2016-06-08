@@ -208,7 +208,7 @@ class NexusTurn
         rows = parse_table(n.parent.next_element.next_element.next_element.next_element.next_element.next_element) + parse_table(n.parent.next_element.next_element.next_element.next_element.next_element.next_element.next_element.next_element)
       elsif section_heading == 'Production Report'
         rows = parse_table(n.parent.next_element.next_element)
-        rows = parse_table(n.parent.next_element.next_element.next_element.next_element.next_element) if rows.size > 0 && rows[0][0].downcase == "basic production"
+        rows = parse_table(n.parent.next_element.next_element.next_element.next_element) if rows.size > 0 && rows[0][0].downcase == "basic production"
       elsif section_heading == 'Command Report'
         rows = parse_table(n.parent.next_element.next_element)
         s = rows[0][1]
