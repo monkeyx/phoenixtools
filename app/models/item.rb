@@ -285,11 +285,11 @@ class Item < ActiveRecord::Base
 
 	def recommended_buy_price(starbase)
     if high_value_good?(starbase)
-      (local_price(starbase) * 0.75).round(2)
+      (local_price(starbase) * 0.6).round(2)
     elsif medium_value_good?(starbase)
-      (local_price(starbase) * 0.85).round(2)
+      (local_price(starbase) * 0.8).round(2)
     else
-      (local_price(starbase) * 0.80).round(2)
+      (local_price(starbase) * 0.7).round(2)
     end
 	end
 
@@ -301,14 +301,14 @@ class Item < ActiveRecord::Base
     qty_for_item_per_week = (stellars_per_category / price).to_i
     if trade_good?
       if high_value_good?(starbase)
-		    return qty_for_item_per_week * 10
+		    return 5000
       elsif medium_value_good?(starbase)
-        return qty_for_item_per_week * 100
+        return  25000
       else
-        return qty_for_item_per_week * 50
+        return 100000
       end
 		elsif life_good?
-		  return qty_for_item_per_week * 100
+		  return 10000
 		end
 	end
 
