@@ -167,7 +167,7 @@ class NexusTurn
   end
 
   def read_item_section(section,items_hash={})
-    # Rails.logger.info "SECTION SIZE = #{section.size}"
+    # LOG.info "SECTION SIZE = #{section.size}"
     return items_hash unless section
     size = section.size
     (1..(size-1)).each do |i|
@@ -191,7 +191,7 @@ class NexusTurn
     table = {}
     self.doc.xpath('//td[@class="report_left"]').each do |n|
       section_heading = n.content
-      # Rails.logger.info "Section #{section_heading}"
+      # LOG.info "Section #{section_heading}"
       rows = []
       if section_heading == 'Personnel Report'
         rows = parse_table(n.parent.next_element.next_element.next_element)
@@ -213,14 +213,14 @@ class NexusTurn
         rows = parse_table(n.parent.next_element.next_element)
         s = rows[0][1]
         s = s[0..(s.index('(')-1)].strip
-        # Rails.logger.info "NAME = #{s}"
+        # LOG.info "NAME = #{s}"
         @name = s
         s = rows[0][3]
         s = s[(s.index('(')+1)..(s.index(')')-1)].strip.to_i
-        # Rails.logger.info "AFF = #{s}"
+        # LOG.info "AFF = #{s}"
         @affiliation = Affiliation.find_by_id(s)
         ln = n.parent.next_element.next_element.next_element.next_element.next_element.next_element
-        # Rails.logger.info "LOCATION: #{ln.content}"
+        # LOG.info "LOCATION: #{ln.content}"
         #parse_location(ln)
       else
         rows = parse_table(n.parent.next_element.next_element)
@@ -232,15 +232,15 @@ class NexusTurn
 
   # def parse_location(n)
   #   return nil unless n
-  #   #Rails.logger.info "LOCATION TEXT\n#{n}"
+  #   #LOG.info "LOCATION TEXT\n#{n}"
   #   s1 = n.children.first.content
   #   s2 = n.next_element.children.first.content
-  #   #Rails.logger.info "LOCATION 1: #{s1}"
-  #   #Rails.logger.info "LOCATION 2: #{s2}"
+  #   #LOG.info "LOCATION 1: #{s1}"
+  #   #LOG.info "LOCATION 2: #{s2}"
   #   s1 = s1[(s1.index('(')+1)..(s1.index(')')-1)].strip.to_i if s1.index('(')
   #   s2 = s2[(s2.index('(')+1)..(s2.index(')')-1)].strip.to_i if s2.index('(')
-  #   #Rails.logger.info "LOCATION 1: #{s1}"
-  #   #Rails.logger.info "LOCATION 2: #{s2}"
+  #   #LOG.info "LOCATION 1: #{s1}"
+  #   #LOG.info "LOCATION 2: #{s2}"
   #   if s1 && s2
   #     @cbody = CelestialBody.find_by_cbody_id_and_star_system_id(s1,s2)
   #     @star_system = StarSystem.find_by_id(s2)
@@ -259,7 +259,7 @@ class NexusTurn
           cols << column.content
         end
       end
-      # Rails.logger.info cols.join(",")
+      # LOG.info cols.join(",")
       rows << cols
     end
     rows

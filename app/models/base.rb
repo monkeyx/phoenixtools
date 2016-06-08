@@ -331,7 +331,7 @@ class Base < ActiveRecord::Base
     si.quantity = quantity
     si.category = category
     si.save!
-    Rails.logger.info "#{self} - #{quantity} x #{item} - #{category}"
+    LOG.info "#{self} - #{quantity} x #{item} - #{category}"
     si.quantity
   end
 
@@ -455,8 +455,8 @@ class Base < ActiveRecord::Base
     begin
       turn = get_turn!
     rescue Exception => e
-      Rails.logger.error "Failed to fetch turn for #{to_s} because #{e}"
-      Rails.logger.error e.backtrace.join("\n")
+      LOG.error "Failed to fetch turn for #{to_s} because #{e}"
+      LOG.error e.backtrace.join("\n")
       turn = nil
     end
     return false unless turn
@@ -477,22 +477,22 @@ class Base < ActiveRecord::Base
       self.drug_max_income = turn.planetary_report['Trade']['Drugs']['Max']
     end
     # PERSONNEL
-    Rails.logger.info "#{turn.personnel.size} personnel items"
+    LOG.info "#{turn.personnel.size} personnel items"
     turn.personnel.each {|item, quantity| set_base_items!(item, quantity, BaseItem::PERSONNEL)}
     # INVENTORY
-    Rails.logger.info "#{turn.inventory.size} inventory items"
+    LOG.info "#{turn.inventory.size} inventory items"
     turn.inventory.each {|item, quantity| set_base_items!(item, quantity, BaseItem::INVENTORY)}
     # RAW MATERIALS
-    Rails.logger.info "#{turn.raw_materials.size} raw material items"
+    LOG.info "#{turn.raw_materials.size} raw material items"
     turn.raw_materials.each {|item, quantity| set_base_items!(item, quantity, BaseItem::RAW_MATERIALS)}
     # TRADE ITEMS
-    Rails.logger.info "#{turn.trade_items.size} trade items"
+    LOG.info "#{turn.trade_items.size} trade items"
     turn.trade_items.each {|item, quantity| set_base_items!(item, quantity, BaseItem::TRADE_ITEMS)}
     # ITEM GROUPS
     turn.item_groups.keys.each do |ig_id|
       ig_name = turn.item_groups[ig_id][:name]
       ig_items = turn.item_groups[ig_id][:items]
-      Rails.logger.info "#{ig_items.size} items in #{ig_name} (#{ig_id})"
+      LOG.info "#{ig_items.size} items in #{ig_name} (#{ig_id})"
       ig_items.keys.each do |item|
         ItemGroup.create!(:base_id => self.id, :name => ig_name, :group_id => ig_id, :item_id => item.id, :quantity => ig_items[item])
       end

@@ -3,18 +3,18 @@ module Turn
   def get_turn!
     code, turn = Nexus.html_client.get_turn(self.id)
     if code == 200
-      Rails.logger.info "Fetched turn for #{self}: #{turn.name} - #{turn.affiliation}"
+      LOG.info "Fetched turn for #{self}: #{turn.name} - #{turn.affiliation}"
       unless turn.name == self.name
-        Rails.logger.info "#{self} changed name to #{turn.name}"
+        LOG.info "#{self} changed name to #{turn.name}"
         update_attributes!(:name => turn.name)
       end
       unless turn.affiliation == self.affiliation
-        Rails.logger.info "#{self} changed affiliation to #{turn.affiliation}"
+        LOG.info "#{self} changed affiliation to #{turn.affiliation}"
         update_attributes!(:affiliation_id => turn.affiliation.id)
       end
       return turn
     else
-      Rails.logger.error "Failed to fetch turn for #{self} - #{code}"
+      LOG.error "Failed to fetch turn for #{self} - #{code}"
       return false
     end
   end
@@ -22,7 +22,7 @@ module Turn
   def update_item_resources!(turn)
     self.base_resources.destroy_all
     turn.resources.each do |resource|
-      # Rails.logger.info resource
+      # LOG.info resource
       br = BaseResource.create!(:base_id => self.id, 
         :item_id => resource[:item].id, 
         :resource_id => resource[:resource_id].to_i, 

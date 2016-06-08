@@ -35,23 +35,23 @@ class JumpLink < ActiveRecord::Base
 	end
 
 	def self.extrapolate_until_no_more!
-		Rails.logger.info "Extrapolating jump links..."
+		LOG.info "Extrapolating jump links..."
 
 		pass = 0
 		total_links_count = 0
 		while (links_added = extrapolate!) > 0
 		  pass += 1
-		  Rails.logger.info "Pass #{pass} added #{links_added} new jump links"
+		  LOG.info "Pass #{pass} added #{links_added} new jump links"
 		  total_links_count += links_added
 		end
 
-		Rails.logger.info "Finished extrapolating adding #{total_links_count} new jump links."
+		LOG.info "Finished extrapolating adding #{total_links_count} new jump links."
 	end
 
 	def self.extrapolate!
 		new_links_count = 0
 		StarSystem.all.each do |star_system|
-		  Rails.logger.info "Examing links from #{star_system.name} (#{star_system.id})"
+		  LOG.info "Examing links from #{star_system.name} (#{star_system.id})"
 		    JumpLink.where(from_id: star_system.id).each do |jump_link|
 		      if jump_link.jumps < 4
 		        JumpLink.where(from_id: jump_link.to_id).each do |next_link|
@@ -60,7 +60,7 @@ class JumpLink < ActiveRecord::Base
 		            combined_jumps = jump_link.jumps + next_link.jumps
 		            if combined_jumps <= 4 && (qj.nil? || combined_jumps < qj.jumps)
 		              new_link = JumpLink.create!(:from_id => jump_link.from_id, :to_id => next_link.to_id, :hidden => true, :jumps => combined_jumps)
-		              Rails.logger.info "Added new link between #{jump_link.from} to #{next_link.to} in #{combined_jumps} jumps"
+		              LOG.info "Added new link between #{jump_link.from} to #{next_link.to} in #{combined_jumps} jumps"
 		              new_links_count += 1
 		            end
 		          end

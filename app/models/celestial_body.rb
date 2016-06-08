@@ -114,7 +114,7 @@ class CelestialBody < ActiveRecord::Base
 			  		fail_count += 1
 				else
 			  		values.each {|key,val|set_cbody_attribute_value!(key,val)}
-			  		Rails.logger.info "Fetched data and map for #{self}"
+			  		LOG.info "Fetched data and map for #{self}"
 			  		return self
 				end
 			end
@@ -207,7 +207,7 @@ class CelestialBody < ActiveRecord::Base
 		else
 			list = all.select{|cb| cb.celestial_body_attributes.empty?}
 		end
-		list.each{|cb| Rails.logger.info "Fetching data for #{cb} in #{cb.star_system}"; cb.fetch_cbody_data!; Rails.logger.info "Found #{cb.terrain_types.keys.size} terrain types"}
+		list.each{|cb| LOG.info "Fetching data for #{cb} in #{cb.star_system}"; cb.fetch_cbody_data!; LOG.info "Found #{cb.terrain_types.keys.size} terrain types"}
 	end
 
 	def get_cbody_attribute_value(key)

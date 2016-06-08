@@ -54,7 +54,7 @@ class Item < ActiveRecord::Base
 
 	def self.inspect_all_related_items!
 		Item.all.each do |item|
-		  Rails.logger.info "Inspecting #{item}"
+		  LOG.info "Inspecting #{item}"
 		  item.blueprint
 		  item.substitute_item
 		  item.raw_materials
@@ -215,7 +215,7 @@ class Item < ActiveRecord::Base
 	def local_price(base)
 		return 0 unless base && base.trade_good_value_per_mu
 		race_multiplier = (base.race.nil? || race.nil? || base.race == 'Sentient' || race == 'Sentient' || base.race != race) ? 1 : 2
-		# Rails.logger.info "RACE #{race_multiplier}"
+		# LOG.info "RACE #{race_multiplier}"
 		if trade_good?
 		  planetary_multiplier = base.trade_good_value_per_mu
 		elsif life_good?
@@ -225,9 +225,9 @@ class Item < ActiveRecord::Base
 		else
 		  planetary_multiplier = 0
 		end
-		# Rails.logger.info "PLANET #{planetary_multiplier}"
+		# LOG.info "PLANET #{planetary_multiplier}"
 		dm = distance_multiplier(base.star_system, base.celestial_body)
-		# Rails.logger.info "DISTANCE #{dm}"
+		# LOG.info "DISTANCE #{dm}"
 		(dm * source_value * planetary_multiplier * race_multiplier).round(2)
 	end
 
@@ -358,7 +358,7 @@ class Item < ActiveRecord::Base
     else
       values.each {|key,val|set_item_attr_value!(key,val)}
     end
-    Rails.logger.info "Fetched item #{self}"
+    LOG.info "Fetched item #{self}"
     update_attributes(:attributes_fetched => true)
     self
   end
@@ -696,7 +696,7 @@ class Item < ActiveRecord::Base
   end
 
   def load_item_hash(yaml_string)
-#    Rails.logger.info "YAML = #{yaml_string}"
+#    LOG.info "YAML = #{yaml_string}"
     map = YAML.load(yaml_string)
     hash = {}
     map.each do |k,v|

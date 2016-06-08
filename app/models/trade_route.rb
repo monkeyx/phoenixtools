@@ -192,7 +192,7 @@ class TradeRoute < ActiveRecord::Base
 
   def self.generate!
     TradeRoute.destroy_all
-    Rails.logger.info "Generating trade routes...."
+    LOG.info "Generating trade routes...."
     count = 0
     MarketSell.all.each do |sell_item|
       MarketBuy.where({:item_id => sell_item.item.id}).each do |buy_item|
@@ -210,12 +210,12 @@ class TradeRoute < ActiveRecord::Base
             end
           end
           if tr
-            Rails.logger.info "Route Added: #{tr.item} $#{sell_item.price}ea. @ #{sell_item.base} to $#{buy_item.price}ea. @ #{buy_item.base} - weekly barge profit $#{tr.barge_weekly_profit}"
+            LOG.info "Route Added: #{tr.item} $#{sell_item.price}ea. @ #{sell_item.base} to $#{buy_item.price}ea. @ #{buy_item.base} - weekly barge profit $#{tr.barge_weekly_profit}"
           end
         end
       end
     end
-    Rails.logger.info "Finished generating #{count} trade routes."
+    LOG.info "Finished generating #{count} trade routes."
     count
   end
 

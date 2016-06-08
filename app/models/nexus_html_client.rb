@@ -43,7 +43,7 @@ class NexusHtmlClient
     code, doc = fetch_page(url)
     return code, doc unless code == 200
     doc.xpath('//td[@class="turns_tab_off"]').each do |n|
-      # Rails.logger.info "N = #{n.content}"
+      # LOG.info "N = #{n.content}"
       anchor = n.xpath('.//a').first
       if anchor.content.include?("(#{id})")
         onclick = anchor['onclick']
@@ -66,7 +66,7 @@ class NexusHtmlClient
     doc.xpath('//div[@class="jump_map_system"]').each do |s|
       ss = parse_star_system(s.content)
       ss.periphery_id = periphery_id
-      Rails.logger.info "S = #{s}" if ss.save
+      LOG.info "S = #{s}" if ss.save
     end
     doc.xpath('//div[@class="jump_map_link"]').each do |jl|
       jlp = jl['title'].strip.split('<->')
@@ -77,7 +77,7 @@ class NexusHtmlClient
       ss_b.save
       jumps = jlj[1].gsub('jumps','').gsub('jump','').gsub(']','').to_i
       jl = JumpLink.link_systems!(ss_a, ss_b, jumps)
-      Rails.logger.info "JL = #{jl}"
+      LOG.info "JL = #{jl}"
     end
     nil
   end
@@ -96,7 +96,7 @@ class NexusHtmlClient
     self.class.cookies(cookies)
     response = self.class.get(url)
     unless response.code == 200
-      Rails.logger.info "Nexus: Error #{response.code}"
+      LOG.info "Nexus: Error #{response.code}"
       return response.code, nil
     end
     response['data']['id_lists']['pos']['pos']
@@ -121,7 +121,7 @@ class NexusHtmlClient
     self.class.cookies(cookies)
     response = self.class.get(url)
     unless response.code == 200
-      Rails.logger.info "Nexus: Error #{response.code}"
+      LOG.info "Nexus: Error #{response.code}"
       return response.code, nil
     end
     #puts response

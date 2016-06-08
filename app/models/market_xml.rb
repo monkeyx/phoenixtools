@@ -1,6 +1,6 @@
 class MarketXml
 	def self.fetch!
-	    Rails.logger.info "Fetching market data..."
+	    LOG.info "Fetching market data..."
 	    
 	    doc = Nokogiri::HTML(open(MARKET_XML))
 
@@ -13,7 +13,7 @@ class MarketXml
 	    n.market_fetched_at = market_time
 	    n.save
 
-	    Rails.logger.info "Star Date: #{star_date}"
+	    LOG.info "Star Date: #{star_date}"
 
 	    MarketBuy.destroy_all
 	    MarketSell.destroy_all
@@ -76,7 +76,7 @@ class MarketXml
 	      end
 
 	    end
-	    Rails.logger.info "Finished market fetch. #{MarketBuy.count} buys and #{MarketSell.count} sells."
+	    LOG.info "Finished market fetch. #{MarketBuy.count} buys and #{MarketSell.count} sells."
 	    
 	  end
 end

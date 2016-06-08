@@ -37,11 +37,11 @@ class Path < ActiveRecord::Base
 		Path.destroy_all
 		PathPoint.destroy_all
 
-		Rails.logger.info "Generating navigation paths..."
+		LOG.info "Generating navigation paths..."
 		StarSystem.all.each do |from|
 		  generate_paths!(from)
 		end
-		Rails.logger.info "Finished generating #{Path.count} paths."
+		LOG.info "Finished generating #{Path.count} paths."
 		Path.count
 	end
 
@@ -69,7 +69,7 @@ class Path < ActiveRecord::Base
 			end
 			p.save!
 			puts ''
-			Rails.logger.info "Path: #{start_system} -> #{target_system}: #{p.tu_cost}TU / #{p.path_points.size} points"
+			LOG.info "Path: #{start_system} -> #{target_system}: #{p.tu_cost}TU / #{p.path_points.size} points"
 		end
 	end
 

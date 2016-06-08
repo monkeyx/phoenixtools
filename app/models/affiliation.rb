@@ -158,7 +158,7 @@ class Affiliation < ActiveRecord::Base
 		values = {}
 		key = nil
 		doc.xpath('//td[@class="aff_text"]').each do |n|
-		  # Rails.logger.info "N = #{n}"
+		  # LOG.info "N = #{n}"
 		  if key
 		    if key == 'Relations'
 		      rels = {}
@@ -190,7 +190,7 @@ class Affiliation < ActiveRecord::Base
 		code = get_affiliation_attribute_value('Code')
 		self.tag ||= code
 		save
-		Rails.logger.info "Fetched affiliation #{self}"
+		LOG.info "Fetched affiliation #{self}"
 		self
 	end
 
@@ -200,7 +200,7 @@ class Affiliation < ActiveRecord::Base
 			rels = []
 			relations.each do |k,v|
 				rel = parse_relation(v)[1]
-				Rails.logger.info "#{self} -> #{k} = #{rel}"
+				LOG.info "#{self} -> #{k} = #{rel}"
 				rels << k if rel == rel_type
 			end
 			return rels.uniq{|aff| aff.id}

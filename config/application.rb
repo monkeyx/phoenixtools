@@ -8,6 +8,12 @@ require 'open-uri'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+File.open(File.expand_path('../../log/phoenixtools.log', __FILE__), 'w+') do |f|
+	f.write "*** #{Time.now} ***\n"
+end
+
+LOG = Logger.new(File.expand_path('../../log/phoenixtools.log', __FILE__))
+
 module Phoenixtools
   class Application < Rails::Application
     config.generators do |g|

@@ -113,7 +113,7 @@ class StarSystem < ActiveRecord::Base
 
 	def self.fetch_cbodies!
 		Nexus.html_client.login
-		StarSystem.all.each{|s| Rails.logger.info "Fetching cbodies for #{s}"; s.fetch_cbodies!; Rails.logger.info "Found #{s.celestial_bodies.count}"}
+		StarSystem.all.each{|s| LOG.info "Fetching cbodies for #{s}"; s.fetch_cbodies!; LOG.info "Found #{s.celestial_bodies.count}"}
 	end
 
 	def jump_links

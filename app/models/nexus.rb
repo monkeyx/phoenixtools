@@ -73,7 +73,7 @@ class Nexus < ActiveRecord::Base
 
 	def schedule_setup!
 		update_attributes!(:setup_complete => false, :setup_notice => "Starting setup")
-		Rails.logger.info "Starting setup"
+		LOG.info "Starting setup"
 		setup!
 	end
 
@@ -111,7 +111,7 @@ class Nexus < ActiveRecord::Base
 		update_attributes!(:setup_notice => "Adding known stargates")
 		Stargate.destroy_all
 		StargateRoute.destroy_all
-		Rails.logger.info "Adding known stargates"
+		LOG.info "Adding known stargates"
 		Stargate.link_systems!(61,103, 5069, 1600)
 		Stargate.link_systems!(103,186, 1600, 564)
 		Stargate.link_systems!(103,121, 1600, 8434)
@@ -127,7 +127,7 @@ class Nexus < ActiveRecord::Base
 
 		# WORMHOLES
 		update_attributes!(:setup_notice => "Adding known wormholes")
-		Rails.logger.info "Adding known wormholes"
+		LOG.info "Adding known wormholes"
 		Wormhole.destroy_all
 		Wormhole.link_systems!(99,41,2231,565)
 		Wormhole.link_systems!(6,9,3318,7637)
@@ -146,25 +146,25 @@ class Nexus < ActiveRecord::Base
 		html = Nexus.html_client
 		html.login
 		update_attributes!(:setup_notice => "Fetching affiliation attributes")
-		Rails.logger.info "Fetching affiliation attributes"
+		LOG.info "Fetching affiliation attributes"
 		Affiliation.all.each{|a| a.fetch_affiliation_attributes! }
 		JumpLink.destroy_all
 		Periphery.all.each do |p| 
 			html = Nexus.html_client
 			html.login
 			Nexus.config.update_attributes!(:setup_notice => "Fetching #{p} jump map")
-			Rails.logger.info "Fetching #{p} jump map"
+			LOG.info "Fetching #{p} jump map"
 			html.get_jump_map(p.id)
 		end
 		update_attributes!(:setup_notice => "Extrapolating jump links")
-		Rails.logger.info "Extrapolating jump links"
+		LOG.info "Extrapolating jump links"
 		JumpLink.extrapolate_until_no_more!
 		setup_known_stargates_and_wormholes!
 		update_attributes!(:setup_notice => "Generating paths")
-		Rails.logger.info "Generating paths"
+		LOG.info "Generating paths"
 		Path.generate!
 		update_attributes!(:setup_notice => "Setup complete", :setup_complete => true, :core_fetched_at => Time.now, :jump_map_fetched_at => Time.now)
-		Rails.logger.info "Setup complete"
+		LOG.info "Setup complete"
 	end
 
 	handle_asynchronously :setup!
@@ -172,33 +172,33 @@ class Nexus < ActiveRecord::Base
 
 	def update_market!
 		update_attributes!(:update_notice => "Fetching market data")
-		Rails.logger.info "Fetching market data"
+		LOG.info "Fetching market data"
 		MarketXml.fetch!
 		update_attributes!(:update_notice => "Generating trade routes") 
-		Rails.logger.info "Generating trade routes"
+		LOG.info "Generating trade routes"
 		TradeRoute.generate!
 		update_attributes!(:update_notice => "Trade routes generated", :updating_market => false, :market_fetched_at => Time.now)
-		Rails.logger.info "Trade routes generated"
+		LOG.info "Trade routes generated"
 	end
 
 	handle_asynchronously :update_market!
 
 	def update_items!
 		update_attributes!(:update_notice => "Fetching item data")
-		Rails.logger.info "Fetching item data"
+		LOG.info "Fetching item data"
 		Item.fetch_missing!
 		update_attributes!(:update_notice => "Item data fetched", :updating_items => false, :items_fetched_at => Time.now)
-		Rails.logger.info "Item data fetched"
+		LOG.info "Item data fetched"
 	end
 
 	handle_asynchronously :update_items!
 
 	def update_cbodies!
 		update_attributes!(:update_notice => "Fetching celestial body data")
-		Rails.logger.info "Fetching celestial body data"
+		LOG.info "Fetching celestial body data"
 		StarSystem.fetch_cbodies!
 		update_attributes!(:update_notice => "Celestial bodies mapped", :updating_cbodies => false, :cbodies_fetched_at => Time.now)
-		Rails.logger.info "Celestial bodies mapped"
+		LOG.info "Celestial bodies mapped"
 	end
 
 	handle_asynchronously :update_cbodies!
@@ -209,17 +209,17 @@ class Nexus < ActiveRecord::Base
 			html = Nexus.html_client
 			html.login
 			Nexus.config.update_attributes!(:update_notice => "Fetching #{p} jump map")
-			Rails.logger.info "Fetching #{p} jump map"
+			LOG.info "Fetching #{p} jump map"
 			html.get_jump_map(p.id)
 		end
 		update_attributes!(:update_notice => "Extrapolating jump links") 
-		Rails.logger.info "Extrapolating jump links"
+		LOG.info "Extrapolating jump links"
 		JumpLink.extrapolate_until_no_more!
 		update_attributes!(:update_notice => "Generating paths") 
-		Rails.logger.info "Generating paths"
+		LOG.info "Generating paths"
 		Path.generate!
 		update_attributes!(:update_notice => "Jump map up to date", :updating_jump_map => false, :jump_map_fetched_at => Time.now)
-		Rails.logger.info "Jump map up to date"
+		LOG.info "Jump map up to date"
 	end
 
 	handle_asynchronously :update_jump_map!
@@ -233,23 +233,23 @@ class Nexus < ActiveRecord::Base
 		client = Nexus.html_client
 		client.login 
 		update_attributes!(:update_notice => "Fetching turns for bases")
-		Rails.logger.info "Fetching turns for bases"
+		LOG.info "Fetching turns for bases"
 		Position.bases.each{|p| p.base.fetch_turn!}
 		update_attributes!(:update_notice => "Base turns fetched", :updating_turns => false, :turns_fetched_at => Time.now)
-		Rails.logger.info "Base turns fetched"
+		LOG.info "Base turns fetched"
 	end
 
 	handle_asynchronously :update_turns!
 
 	def update_paths_and_trade_routes!
 		update_attributes!(:update_notice => "Fetching market data")
-		Rails.logger.info "Fetching market data"
+		LOG.info "Fetching market data"
 		MarketXml.fetch!
 		update_attributes!(:update_notice => "Generating paths") 
-		Rails.logger.info "Generating paths"
+		LOG.info "Generating paths"
 		Path.generate!
 		update_attributes!(:update_notice => "Generating trade routes") 
-		Rails.logger.info "Generating trade routes"
+		LOG.info "Generating trade routes"
 		TradeRoute.generate!
 	end
 
