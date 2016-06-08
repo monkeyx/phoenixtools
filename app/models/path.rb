@@ -85,15 +85,17 @@ class Path < ActiveRecord::Base
 		end
 
 		pp.each do |point|
-		  unless point.to_id == start_system.id
+		  unless point.to_id == start_system.id || point.to.nil?
 		    path_copy = Array.new(path)
 		    path_copy << point
 		    tu_cost = calculate_path_tu_cost(path_copy)
-		    quickest_so_far = find_shortest_time(start_system, point.to)
-		    if (quickest_so_far.nil? || quickest_so_far > tu_cost)
-		      make_path!(start_system, point.to, path_copy) if !path_copy.empty?
-		      generate_paths!(start_system, path_copy, tu_cost)
-		    end
+		    if tu_cost > 0
+			    quickest_so_far = find_shortest_time(start_system, point.to)
+			    if (quickest_so_far.nil? || quickest_so_far > tu_cost)
+			      make_path!(start_system, point.to, path_copy) if !path_copy.empty?
+			      generate_paths!(start_system, path_copy, tu_cost)
+			    end
+			end
 		  end
 		end
 	end
@@ -104,8 +106,11 @@ class Path < ActiveRecord::Base
 		JumpLink.where(from_id: from.id).each do |jump|
 		  potential_points << jump if check_potential_point(from, jump, potential_points, previous_system)
 		end
-		StargateRoute.where(from_id: from.id).each do |gate_route|
-			potential_points << gate_route if check_potential_point(from, gate_route, potential_points, previous_system)
+		sg = Stargate.where(star_system: from.id).first
+		if sg 
+			StargateRoute.where(from_id: sg.star_system_id).each do |gate_route|
+				potential_points << gate_route if check_potential_point(from, gate_route, potential_points, previous_system)
+			end
 		end
 		Wormhole.where(star_system_id: from.id).each do |wormhole|
 		  potential_points << wormhole if check_potential_point(from, wormhole, potential_points, previous_system)
@@ -118,7 +123,8 @@ class Path < ActiveRecord::Base
 		return false unless point.known?
 		return false if previous_system && previous_system.id == point.to_id
 		return false if list.any? do |previous_point|
-			previous_point.to_id == point.to_id || previous_point.from_id == point.to_id
+			previous_point.to_id == point.to_id || 
+			(previous_point.is_a?(StargateRoute) ? previous_point.from_star_system.id : previous_point.from_id) == (point.is_a?(StargateRoute) ? point.to_star_system.id : point.to_id)
 		end
 		true
 	end

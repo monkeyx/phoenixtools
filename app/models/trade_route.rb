@@ -146,7 +146,7 @@ class TradeRoute < ActiveRecord::Base
   end
 
   def quantity_per_barge
-    @quantity_per_barge ||= (self.item.mass == 0 ? available_volume : if self.item.item_type.nil? || self.item.item_type.cargo?
+    @quantity_per_barge ||= (self.item.mass == 0 ? 10000000 : if self.item.item_type.nil? || self.item.item_type.cargo?
       (BARGE_CARGO_CAPACITY / (self.item.mass ? self.item.mass : 1)).to_i
     elsif self.item.item_type.life?
       (BARGE_LIFE_CAPACITY / self.item.mass).to_i
@@ -240,7 +240,7 @@ class TradeRoute < ActiveRecord::Base
   end
 
   def to_orders(from_system)
-    orders = [PhoenixOrder.clear_pending, PhoenixOrder.navigation_hazard_status]
+    orders = [PhoenixOrder.navigation_hazard_status]
     unless self.from.star_system == from_system
       path_to_start = from_system.path_to(self.from.star_system)
       orders = path_to_start.to_orders(orders)

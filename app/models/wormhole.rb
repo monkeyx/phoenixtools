@@ -18,8 +18,12 @@ class Wormhole < ActiveRecord::Base
 	    Wormhole.create!(:star_system_id => b_id, :to_id => a_id, :celestial_body_id => cbody_b)
 	end
 
+	def from
+		self.star_system
+	end
+
 	def known?
-		self.to && self.star_system
+		self.to && self.star_system && self.celestial_body
 	end
 
 	def to_s

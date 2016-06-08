@@ -24,21 +24,21 @@ class PathPoint < ActiveRecord::Base
 	end
 
 	def from
-		connection.from
+		@from ||= connection.is_a?(StargateRoute) ? connection.from_star_system : connection.from
 	end
 
 	def to
-		connection.to
+		@to ||= connection.is_a?(StargateRoute) ? connection.to_star_system : connection.to
 	end
 
 	def add_orders(orders=[])
 		if self.jump_link
 		orders << PhoenixOrder.jump(to.id)
 		elsif self.stargate
-		orders << PhoenixOrder.move_to_planet(from.id, self.stargate.cbody_id)
+		orders << PhoenixOrder.move_to_planet(from.id, self.stargate.celestial_body.cbody_id)
 		orders << PhoenixOrder.enter_stargate(to.id)
 		elsif self.wormhole
-		orders << PhoenixOrder.move_to_planet(from.id, self.wormhole.cbody_id)
+		orders << PhoenixOrder.move_to_planet(from.id, self.wormhole.celestial_body.cbody_id)
 		orders << PhoenixOrder.enter_wormhole
 		end
 		orders

@@ -178,7 +178,7 @@ class Nexus < ActiveRecord::Base
 		Rails.logger.info "Generating trade routes"
 		TradeRoute.generate!
 		update_attributes!(:update_notice => "Trade routes generated", :updating_market => false, :market_fetched_at => Time.now)
-		Rails.logger.info 
+		Rails.logger.info "Trade routes generated"
 	end
 
 	handle_asynchronously :update_market!
@@ -240,4 +240,18 @@ class Nexus < ActiveRecord::Base
 	end
 
 	handle_asynchronously :update_turns!
+
+	def update_paths_and_trade_routes!
+		update_attributes!(:update_notice => "Fetching market data")
+		Rails.logger.info "Fetching market data"
+		MarketXml.fetch!
+		update_attributes!(:update_notice => "Generating paths") 
+		Rails.logger.info "Generating paths"
+		Path.generate!
+		update_attributes!(:update_notice => "Generating trade routes") 
+		Rails.logger.info "Generating trade routes"
+		TradeRoute.generate!
+	end
+
+	handle_asynchronously :update_paths_and_trade_routes!
 end
