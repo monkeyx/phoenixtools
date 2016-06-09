@@ -18,7 +18,6 @@ class TradeRoute < ActiveRecord::Base
 	scope :from_system, ->(base) { where(from_id: base.id)}
 	scope :to_system, ->(base) { where(to_id: base.id)}
 
-
   def self.affiliation_stats
     require 'pp'
     buyer_affs = {}
@@ -58,6 +57,14 @@ class TradeRoute < ActiveRecord::Base
 
   def self.filtered_by_no_keys(list=all.to_a)
     list.select{|tr| !tr.requires_gate_keys?}
+  end
+
+  def self.filtered_by_not_lifeform(list=all.to_a)
+    list.select{|tr| !tr.item.lifeform?}
+  end
+
+  def self.filtered_by_lifeform(list=all.to_a)
+    list.select{|tr| tr.item.lifeform?}
   end
 
   def self.filtered_by_barge_slots_available(list=all.to_a)

@@ -32,6 +32,12 @@
     </td>
     <td class="<%=h trade_route.item.item_type%>">
       <%=link_to trade_route.item, trade_route.item %>
+      <% if trade_route.item.unknown? %>
+        <span style="color: silver">[?]</span>
+      <% end %>
+      <% if trade_route.item.lifeform? %>
+      <span style="color: red">[L]</span>
+      <% end %>
     </td>
     <td class="<%=h trade_route.item.item_type%>">
       <%=h trade_route.selling_quantity %> @ $<%=h trade_route.sellers_price %>ea.<br/>

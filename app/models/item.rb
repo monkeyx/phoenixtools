@@ -191,6 +191,10 @@ class Item < ActiveRecord::Base
 		@is_life ||= (item_type_attribute == 'Life')
 	end
 
+  def lifeform?
+    @lifeform ||= get_item_attr_value('Lifeform') == "1"
+  end
+
 	def civilian?
 		life_good? && (self.name == 'Hive Egg' || self.name.include?('Civilian'))
 	end
