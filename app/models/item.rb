@@ -685,6 +685,7 @@ class Item < ActiveRecord::Base
       i.id = item_id
       i.save
     end
+    i
   end
 
   def get_attr_value_as_float(key)
