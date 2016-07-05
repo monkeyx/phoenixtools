@@ -79,14 +79,16 @@ class Nexus < ActiveRecord::Base
 
 	def schedule_daily_update!(no_bases=false)
 		update_attributes!(:updating_market => true)
-		update_market!
 		update_attributes!(:updating_items => true)
 		update_items!
 		unless no_bases
 			update_attributes!(:updating_turns => true)
 			update_turns!
 		end
+		update_market!
 	end
+
+	handle_asynchronously :schedule_daily_update!
 
 	def schedule_full_update!
 		update_attributes!(:updating_jump_map => true)
@@ -97,6 +99,8 @@ class Nexus < ActiveRecord::Base
 		update_turns!
 		schedule_daily_update!(true)
 	end
+
+	handle_asynchronously :schedule_full_update!
 
 	def daily_update_in_progress
 		self.updating_market || self.updating_items || self.updating_turns
@@ -181,8 +185,6 @@ class Nexus < ActiveRecord::Base
 		LOG.info "Trade routes generated"
 	end
 
-	handle_asynchronously :update_market!
-
 	def update_items!
 		update_attributes!(:update_notice => "Fetching item data")
 		LOG.info "Fetching item data"
@@ -191,8 +193,6 @@ class Nexus < ActiveRecord::Base
 		LOG.info "Item data fetched"
 	end
 
-	handle_asynchronously :update_items!
-
 	def update_cbodies!
 		update_attributes!(:update_notice => "Fetching celestial body data")
 		LOG.info "Fetching celestial body data"
@@ -200,8 +200,6 @@ class Nexus < ActiveRecord::Base
 		update_attributes!(:update_notice => "Celestial bodies mapped", :updating_cbodies => false, :cbodies_fetched_at => Time.now)
 		LOG.info "Celestial bodies mapped"
 	end
-
-	handle_asynchronously :update_cbodies!
 
 	def update_jump_map!
 		JumpLink.destroy_all
@@ -222,8 +220,6 @@ class Nexus < ActiveRecord::Base
 		LOG.info "Jump map up to date"
 	end
 
-	handle_asynchronously :update_jump_map!
-
 	def update_turns!
 		Position.destroy_all
 		Base.destroy_all
@@ -239,8 +235,6 @@ class Nexus < ActiveRecord::Base
 		LOG.info "Base turns fetched"
 	end
 
-	handle_asynchronously :update_turns!
-
 	def update_paths_and_trade_routes!
 		update_attributes!(:update_notice => "Generating paths") 
 		LOG.info "Generating paths"
@@ -252,6 +246,4 @@ class Nexus < ActiveRecord::Base
 		LOG.info "Generating trade routes"
 		TradeRoute.generate!
 	end
-
-	handle_asynchronously :update_paths_and_trade_routes!
 end
