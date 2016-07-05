@@ -242,12 +242,12 @@ class Nexus < ActiveRecord::Base
 	handle_asynchronously :update_turns!
 
 	def update_paths_and_trade_routes!
-		update_attributes!(:update_notice => "Fetching market data")
-		LOG.info "Fetching market data"
-		MarketXml.fetch!
 		update_attributes!(:update_notice => "Generating paths") 
 		LOG.info "Generating paths"
 		Path.generate!
+		update_attributes!(:update_notice => "Fetching market data")
+		LOG.info "Fetching market data"
+		MarketXml.fetch!
 		update_attributes!(:update_notice => "Generating trade routes") 
 		LOG.info "Generating trade routes"
 		TradeRoute.generate!
