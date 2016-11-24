@@ -26,7 +26,7 @@ You can override this by setting the environment variables PHOENIXTOOLS_DATABASE
 
     a) Download [RubyInstaller for x64 bit](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.3-x64.exe) or [RubyInstaller for x32 bit](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.3.exe) and install.
 
-    b) Install (Bundler)[http://bundler.io/]
+    b) Install [Bundler](http://bundler.io/)
 
 2. Download phoenixtools
 
