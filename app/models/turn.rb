@@ -24,7 +24,7 @@ module Turn
     turn.resources.each do |resource|
       # LOG.info resource
       br = BaseResource.create!(:base_id => self.id, 
-        :item_id => resource[:item].id, 
+        :item_id => resource[:item] ? resource[:item].id : nil, 
         :resource_id => resource[:resource_id].to_i, 
         :resource_drop => resource[:resource_drop].to_i,
         :resource_yield => resource[:resource_yield].to_f,
