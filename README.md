@@ -14,6 +14,12 @@ phoenixtools provides the following features for players:
 * Mining and resource production analysis
 * Search items and planets by their attributes
 
+## Database
+
+This uses postgresql as the database with default role 'phoenix' and password 'phoenix'. 
+
+You can override this by setting the environment variables PHOENIXTOOLS_DATABASE_USERNAME and PHOENIXTOOLS_DATABASE_PASSWORD or by editing the config/database.yml file.
+
 ## Installation
 
 1. Install Ruby (Windows)
