@@ -24,31 +24,33 @@ You can override this by setting the environment variables PHOENIXTOOLS_DATABASE
 
 1. Install Ruby (Windows)
 
-Download [RubyInstaller](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-1.9.3-p545.exe?direct) and install.
+    a) Download [RubyInstaller](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-1.9.3-p545.exe?direct) and install.
+
+    b) Install (Bundler)[http://bundler.io/]
 
 2. Download phoenixtools
 
 3. Install phoenixtools
 
-a) Windows
+    a) Windows
 
-Run install.bat from the root directory of the software.
+        Run install.bat from the root directory of the software.
 
-b) Mac OS X / Linux
+    b) Mac OS X / Linux
 
-Run ./install.sh from the root directory of the software.
+        Run ./install.sh from the root directory of the software.
 
-This can take some time!
+    This can take some time!
 
 4. Start phoenixtools web server
 
-a) Windows
+    a) Windows
 
-Run run.bat from the root directory of the software.
+        Run run.bat from the root directory of the software.
 
-b) Mac OS X / Linux
+    b) Mac OS X / Linux
 
-Run ./run.sh from the root directory of the software.
+    Run ./run.sh from the root directory of the software.
 
 5. Go to the [homepage](http://localhost:3000)
 
