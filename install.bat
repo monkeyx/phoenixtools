@@ -1,4 +1,5 @@
+set RAILS_ENV=production
 bundle
-RAILS_ENV=production bundle exec rake db:create
-RAILS_ENV=production bundle exec rake db:migrate
-RAILS_ENV=production bundle exec rake db:seed
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:seed
