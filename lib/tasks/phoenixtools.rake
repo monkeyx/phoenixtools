@@ -1,4 +1,8 @@
 namespace :phoenixtools do
+	task :reset => :environment do 
+		Nexus.config.reset_update_flags!
+	end
+
 	task :turns => :environment do 
 		MarketXml.fetch!
 		TradeRoute.generate!

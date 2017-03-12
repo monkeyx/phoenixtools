@@ -62,6 +62,11 @@ This may take some time as it populates the database based on your political inf
 
 7. You're good to go!
 
+## TODO
+
+* Fix the install / run for Windows
+* Deep core deposits
+
 ## License
 
 This code is distributed under the terms and conditions of the MIT license.

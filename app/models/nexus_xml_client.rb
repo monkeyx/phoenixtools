@@ -82,7 +82,7 @@ class NexusXMLClient
 					LOG.debug "CBODY = #{cbody_id}"
 					p.celestial_body = CelestialBody.cbody(sys_id, cbody_id) if sys_id
 				elsif loc.include?('Docked')
-					base_id = loc.split('(')[1].split(')')[0].to_i
+					base_id = loc.split('(')[1].split(')')[0].to_i if loc.split('(').length > 1
 					LOG.debug "BASE ID = #{base_id}"
 					b = Base.find_by_id(base_id)
 					p.celestial_body = b.celestial_body if b
